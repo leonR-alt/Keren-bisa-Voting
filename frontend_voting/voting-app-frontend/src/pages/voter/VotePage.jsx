@@ -1,7 +1,7 @@
 //eslint-disable-next-line
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../../styles/votepage.css";
+import "../../styles/VotePage.css";
 
 const VotePage = () => {
   const [candidates, setCandidates] = useState([]);
