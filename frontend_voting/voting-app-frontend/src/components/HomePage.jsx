@@ -1,4 +1,5 @@
 // eslint-disable-next-line no-unused-vars
+import API_BASE_URL from "../config";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -19,7 +20,7 @@ const HomePage = () => {
 
   const checkUserRole = async (token) => {
     try {
-      const response = await fetch("http://localhost:8080/admin/voters", {
+      const response = await fetch("${API_BASE_URL}/admin/voters", {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`,
