@@ -1,7 +1,7 @@
 //eslint-disable-next-line
 import React from 'react';
 // import { useNavigate } from 'react-router-dom';
-import '../../styles/admindashboard.css';
+import '../../styles/AdminDashboard.css';
 
 const AdminDashboard = () => {
 
