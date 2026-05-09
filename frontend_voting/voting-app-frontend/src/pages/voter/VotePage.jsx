@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/VotePage.css";
+import API_BASE_URL from "../../config";
 
 const VotePage = () => {
   const [candidates, setCandidates] = useState([]);
@@ -18,7 +19,7 @@ const VotePage = () => {
           return;
         }
 
-        const response = await fetch("/api/candidates", {
+        const response = await fetch(`${API_BASE_URL}/candidates`, {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${token}`, // Send token with request
@@ -44,7 +45,7 @@ const VotePage = () => {
     }
 
     try {
-      const response = await fetch(`/api/candidates/${candidateId}/vote`, {
+      const response = await fetch(`${API_BASE_URL}/candidates/${candidateId}/vote`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
