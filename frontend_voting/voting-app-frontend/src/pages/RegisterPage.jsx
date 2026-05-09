@@ -53,7 +53,7 @@ const VoterRegistration = () => {
 
   return (
     <div className="registration-page">
-      <h2>Register as a New Voter</h2>
+      <h2>Buruan Daftar</h2>
       {error && <div className="error-message">{error}</div>}
       {success && <div className="success-message">{success}</div>}
       <form onSubmit={handleSubmit} className="registration-form">
