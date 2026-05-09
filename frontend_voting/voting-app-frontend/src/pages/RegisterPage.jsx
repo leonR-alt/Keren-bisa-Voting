@@ -64,7 +64,7 @@ const VoterRegistration = () => {
             name="name"
             value={formData.name}
             onChange={handleInputChange}
-            placeholder="Enter your name"
+            placeholder="Masukan nama lengkap"
           />
         </label>
         <label>
@@ -74,7 +74,7 @@ const VoterRegistration = () => {
             name="email"
             value={formData.email}
             onChange={handleInputChange}
-            placeholder="Enter your email"
+            placeholder="Masukan email valid"
           />
         </label>
         <label>
@@ -84,10 +84,10 @@ const VoterRegistration = () => {
             name="password"
             value={formData.password}
             onChange={handleInputChange}
-            placeholder="Enter your password"
+            placeholder="Masukan password"
           />
         </label>
-        <button type="submit">Register</button>
+        <button type="submit">Daftar</button>
       </form>
     </div>
   );
