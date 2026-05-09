@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import API_BASE_URL from "../config";
-import "./LoginPage.css";
+import "../styles/LoginPage.css";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
