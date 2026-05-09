@@ -19,7 +19,7 @@ const VoterDashboard = () => {
       }
 
       try {
-        const response = await fetch("/api/voters/me", {
+        const response = await fetch("https://keren-bisa-voting-production.up.railway.app/voters/me", {
           headers: {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json",
