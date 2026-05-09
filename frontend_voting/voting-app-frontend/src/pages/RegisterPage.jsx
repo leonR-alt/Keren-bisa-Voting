@@ -31,7 +31,7 @@ const VoterRegistration = () => {
     }
 
     try {
-      const response = await fetch("/api/voters/register", {
+      const response = await fetch("https://keren-bisa-voting-production.up.railway.app/voters/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
