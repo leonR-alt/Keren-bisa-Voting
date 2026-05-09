@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 import React, { useState } from "react";
-import "./../styles/registration.css";
+import "./../styles/Registration.css";
 
 const VoterRegistration = () => {
   const [formData, setFormData] = useState({
