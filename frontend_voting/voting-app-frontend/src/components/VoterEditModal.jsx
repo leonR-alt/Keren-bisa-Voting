@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
 import PropTypes from "prop-types";
+import API_BASE_URL from "../config";
 
 const VoterEditModal = ({ voter, onClose, onUpdate }) => {
   const [name, setName] = useState(voter.name);
@@ -23,7 +24,7 @@ const VoterEditModal = ({ voter, onClose, onUpdate }) => {
         return;
       }
   
-      const response = await fetch(`/api/admin/voters/${voter.id}`, {  // Updated endpoint
+      const response = await fetch(`${API_BASE_URL}/admin/voters/${voter.id}`, {  // Updated endpoint
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

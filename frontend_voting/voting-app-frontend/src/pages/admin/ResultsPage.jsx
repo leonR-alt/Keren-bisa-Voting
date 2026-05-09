@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from "react";
+import API_BASE_URL from "../../config";
 
 const ResultsPage = () => {
   const [results, setResults] = useState([]);
@@ -15,7 +16,7 @@ const ResultsPage = () => {
       }
 
       try {
-        const response = await fetch("/api/admin/results", {
+        const response = await fetch(`${API_BASE_URL}/admin/results`, {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${token}`,

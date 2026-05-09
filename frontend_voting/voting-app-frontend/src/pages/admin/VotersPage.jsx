@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from "react";
 import VoterEditModal from "../../components/VoterEditModal";
+import API_BASE_URL from "../../config";
 
 const VotersPage = () => {
   const [voters, setVoters] = useState([]);
@@ -21,7 +22,7 @@ const VotersPage = () => {
     }
 
     try {
-      const response = await fetch("/api/admin/voters", {
+      const response = await fetch(`${API_BASE_URL}/admin/voters`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`, // Send token with request
@@ -76,7 +77,7 @@ const VotersPage = () => {
     }
 
     try {
-      const response = await fetch(`/api/admin/voters/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/admin/voters/${id}`, {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${token}`, // Send token with request

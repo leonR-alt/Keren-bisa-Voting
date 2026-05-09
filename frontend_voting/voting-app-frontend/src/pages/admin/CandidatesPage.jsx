@@ -1,5 +1,6 @@
 //eslint-disable-next-line
 import React, { useState, useEffect } from "react";
+import API_BASE_URL from "../../config";
 
 const CandidatesPage = () => {
   const [candidates, setCandidates] = useState([]);
@@ -23,7 +24,7 @@ const CandidatesPage = () => {
     }
 
     try {
-      const response = await fetch("/api/candidates", {
+      const response = await fetch(`${API_BASE_URL}/candidates`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`, // Add token to Authorization header
@@ -53,7 +54,7 @@ const CandidatesPage = () => {
     }
 
     try {
-      const response = await fetch("/api/admin/candidates", {
+      const response = await fetch(`${API_BASE_URL}/admin/candidates`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -78,7 +79,7 @@ const CandidatesPage = () => {
     }
 
     try {
-      const response = await fetch(`/api/admin/candidates/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/admin/candidates/${id}`, {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${token}`, // Add token to Authorization header
@@ -113,7 +114,7 @@ const CandidatesPage = () => {
     }
 
     try {
-      const response = await fetch(`/api/admin/candidates/${editingCandidate.id}`, {
+      const response = await fetch(`${API_BASE_URL}/admin/candidates/${editingCandidate.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
