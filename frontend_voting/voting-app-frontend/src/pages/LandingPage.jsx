@@ -70,7 +70,7 @@ const LandingPage = () => {
                   </div>
                 </div>
                 <div className="card-candidates">
-                  {["Kandidat A", "Kandidat B", "Kandidat C"].map((name, i) => (
+                  {["Prabowo Mondardo", "Abah Anies", "Ganjar Sudah Dewasa"].map((name, i) => (
                     <div className="candidate-row" key={i}>
                       <div className="candidate-avatar">{name[0]}</div>
                       <div className="candidate-info">
@@ -88,7 +88,7 @@ const LandingPage = () => {
                 <div className="stat-row">
                   <span className="stat-icon">👥</span>
                   <div>
-                    <div className="stat-num">1,248</div>
+                    <div className="stat-num">999+</div>
                     <div className="stat-lbl">Total Pemilih</div>
                   </div>
                 </div>
