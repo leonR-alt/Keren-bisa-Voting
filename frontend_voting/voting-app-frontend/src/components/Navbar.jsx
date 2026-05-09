@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/AuthContext";
-import "./Navbar.css";
+import "../styles/Navbar.css";
 
 const Navbar = ({ darkMode, toggleDarkMode, isAdmin }) => {
   const { isAuthenticated, logout } = useAuth();
