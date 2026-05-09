@@ -1,4 +1,5 @@
 // eslint-disable-next-line no-unused-vars
+import API_BASE_URL from "../config";
 import React, { useState } from "react";
 import './../styles/LoginPage.css';
 
@@ -17,7 +18,7 @@ const LoginPage = () => {
 
     try {
       // Step 1: Login and retrieve token
-      const loginResponse = await fetch("http://localhost:8080/voters/login", {
+      const loginResponse = await fetch(`${API_BASE_URL}/voters/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -33,7 +34,7 @@ const LoginPage = () => {
       localStorage.setItem("token", token);
 
       // Step 2: Check if the user has admin access
-      const roleResponse = await fetch("http://localhost:8080/admin/voters", {
+      const roleResponse = await fetch(`${API_BASE_URL}/admin/voters`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`,

@@ -20,7 +20,7 @@ const HomePage = () => {
 
   const checkUserRole = async (token) => {
     try {
-      const response = await fetch("${API_BASE_URL}/admin/voters", {
+      const response = await fetch(`${API_BASE_URL}/admin/voters`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`,
