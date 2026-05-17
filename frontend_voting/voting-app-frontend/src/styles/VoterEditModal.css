@@ -1,0 +1,114 @@
+.voter-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 7, 18, 0.75);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 20px;
+}
+
+.voter-modal {
+  width: 100%;
+  max-width: 480px;
+  background: #0f172a;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 18px;
+  padding: 24px;
+  color: #e5e7eb;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+.voter-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.voter-modal-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.voter-modal-close {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.voter-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.voter-modal-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 14px;
+  color: #cbd5e1;
+}
+
+.voter-modal-form input {
+  padding: 11px 13px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: #020617;
+  color: #f8fafc;
+  outline: none;
+}
+
+.voter-modal-form input:focus {
+  border-color: #38bdf8;
+}
+
+.voter-modal-checks {
+  display: flex;
+  gap: 18px;
+  margin-top: 5px;
+}
+
+.voter-modal-checks label {
+  flex-direction: row;
+  align-items: center;
+}
+
+.voter-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.btn-cancel,
+.btn-save {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-cancel {
+  background: #334155;
+  color: #e2e8f0;
+}
+
+.btn-save {
+  background: #2563eb;
+  color: white;
+}
+
+.btn-save:hover {
+  background: #1d4ed8;
+}
+
+.btn-cancel:hover {
+  background: #475569;
+}
