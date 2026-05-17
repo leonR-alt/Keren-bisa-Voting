@@ -1,14 +1,119 @@
-.open-modal-btn {
-  margin-top: 20px;
-  padding: 12px 18px;
-  border: none;
-  border-radius: 10px;
-  background: #2563eb;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
+.admin-dashboard {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 20px 60px;
+  position: relative;
+  overflow: hidden;
 }
 
-.open-modal-btn:hover {
-  background: #1d4ed8;
+.admin-dashboard::before {
+  content: '';
+  position: absolute;
+  top: -120px; right: -120px;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.admin-dashboard::after {
+  content: '';
+  position: absolute;
+  bottom: -80px; left: -80px;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.dashboard-title {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  margin: 0 0 12px 0;
+  text-align: center;
+  animation: fadeSlideUp 0.6s ease both;
+}
+
+.dashboard-title::after {
+  content: '';
+  display: block;
+  width: 60px; height: 4px;
+  background: var(--accent);
+  margin: 14px auto 0;
+  border-radius: var(--radius-full);
+  animation: expandLine 0.8s ease 0.3s both;
+}
+
+.dashboard-subtitle {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  margin: 20px 0 0 0;
+  text-align: center;
+  animation: fadeSlideUp 0.6s ease 0.15s both;
+}
+
+.dashboard-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px 40px;
+  margin-top: 48px;
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(20px);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  width: 100%;
+  max-width: 720px;
+  animation: fadeSlideUp 0.6s ease 0.3s both;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  transition: var(--transition);
+}
+
+.stat-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-strong);
+}
+
+.stat-number {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+  display: block;
+}
+
+.stat-label {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 4px;
+  display: block;
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes expandLine {
+  from { width: 0; opacity: 0; }
+  to { width: 60px; opacity: 1; }
 }
