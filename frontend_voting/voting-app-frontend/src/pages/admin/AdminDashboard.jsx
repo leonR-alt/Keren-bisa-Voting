@@ -1,7 +1,7 @@
 //eslint-disable-next-line
 import React, { useState } from 'react';
 import '../../styles/AdminDashboard.css';
-import VoterEditModal from '../VoterEditModal';
+import VoterEditModal from '../../components/VoterEditModal';
 
 const AdminDashboard = () => {
 
