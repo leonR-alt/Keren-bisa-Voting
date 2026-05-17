@@ -16,7 +16,7 @@ const CandidatesPage = () => {
     const token = localStorage.getItem("token");
     if (!token) { setError("Anda belum login."); setLoading(false); return; }
     try {
-      const response = await fetch(`${API_BASE_URL}/candidates`, {
+      const response = await fetch(`${API_BASE_URL}/admin/candidates`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) throw new Error("Gagal memuat kandidat.");
