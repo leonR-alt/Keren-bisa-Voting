@@ -1,6 +1,7 @@
 //eslint-disable-next-line
 import React, { useState, useEffect } from "react";
 import API_BASE_URL from "../../config";
+import "../../styles/AdminPages.css";
 
 const CandidatesPage = () => {
   const [candidates, setCandidates] = useState([]);
