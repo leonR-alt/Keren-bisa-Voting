@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./hooks/AuthContext";
 import Navbar from "./components/Navbar";
 import LandingPage from "./pages/LandingPage";
@@ -12,54 +12,98 @@ import ResultsPage from "./pages/admin/ResultsPage";
 import VotersPage from "./pages/admin/VotersPage";
 import VotePage from "./pages/voter/VotePage";
 import VoterDashboard from "./pages/voter/VoterDashboard";
-import HomePage from "./components/HomePage";
+import API_BASE_URL from "./config";
 
+// ===== DECODE JWT (tanpa library) =====
+const decodeToken = (token) => {
+  try {
+    const payload = token.split(".")[1];
+    const decoded = JSON.parse(atob(payload));
+    // Cek expired
+    if (decoded.exp && decoded.exp * 1000 < Date.now()) return null;
+    return decoded;
+  } catch {
+    return null;
+  }
+};
+
+const getTokenData = () => {
+  const token = localStorage.getItem("token");
+  if (!token) return null;
+  return decodeToken(token);
+};
+
+// ===== PROTECTED ROUTES =====
+
+// Harus login
+const ProtectedRoute = ({ children }) => {
+  const token = localStorage.getItem("token");
+  const data = token ? decodeToken(token) : null;
+  if (!data) return <Navigate to="/login" replace />;
+  return children;
+};
+
+// Harus login DAN admin
+const AdminRoute = ({ children }) => {
+  const token = localStorage.getItem("token");
+  const data = token ? decodeToken(token) : null;
+  if (!data) return <Navigate to="/login" replace />;
+  if (!data.isAdmin) return <Navigate to="/voter" replace />;
+  return children;
+};
+
+// Harus login DAN bukan admin (voter biasa)
+const VoterRoute = ({ children }) => {
+  const token = localStorage.getItem("token");
+  const data = token ? decodeToken(token) : null;
+  if (!data) return <Navigate to="/login" replace />;
+  if (data.isAdmin) return <Navigate to="/admin" replace />;
+  return children;
+};
+
+// ===== APP CONTENT =====
 const AppContent = ({ darkMode, toggleDarkMode }) => {
   const location = useLocation();
   const { isAuthenticated } = useAuth();
-
-  // Detect admin from token
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const checkAdmin = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) { setIsAdmin(false); return; }
-      try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL || "https://keren-bisa-voting-production.up.railway.app"}/admin/voters`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setIsAdmin(res.ok);
-      } catch {
-        setIsAdmin(false);
-      }
-    };
-    checkAdmin();
+    const data = getTokenData();
+    setIsAdmin(data?.isAdmin === true);
   }, [isAuthenticated, location.pathname]);
 
-  const hideNavbar = location.pathname === "/login" || location.pathname === "/register";
+  const hideNavbar =
+    location.pathname === "/login" || location.pathname === "/register";
 
   return (
     <>
-      {!hideNavbar && <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} isAdmin={isAdmin} />}
-      <div style={{ paddingTop: hideNavbar ? 0 : 0 }}>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/results" element={<ResultsPage />} />
-          <Route path="/admin/candidates" element={<CandidatesPage />} />
-          <Route path="/admin/voters" element={<VotersPage />} />
-          <Route path="/voter" element={<VoterDashboard />} />
-          <Route path="/vote" element={<VotePage />} />
-        </Routes>
-      </div>
+      {!hideNavbar && (
+        <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} isAdmin={isAdmin} />
+      )}
+      <Routes>
+        {/* Public */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+
+        {/* Voter only */}
+        <Route path="/voter" element={<VoterRoute><VoterDashboard /></VoterRoute>} />
+        <Route path="/vote" element={<VoterRoute><VotePage /></VoterRoute>} />
+
+        {/* Admin only */}
+        <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+        <Route path="/admin/results" element={<AdminRoute><ResultsPage /></AdminRoute>} />
+        <Route path="/admin/candidates" element={<AdminRoute><CandidatesPage /></AdminRoute>} />
+        <Route path="/admin/voters" element={<AdminRoute><VotersPage /></AdminRoute>} />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </>
   );
 };
 
+// ===== APP =====
 const App = () => {
   const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem("theme") === "dark";
@@ -70,12 +114,10 @@ const App = () => {
     localStorage.setItem("theme", darkMode ? "dark" : "light");
   }, [darkMode]);
 
-  const toggleDarkMode = () => setDarkMode((prev) => !prev);
-
   return (
     <AuthProvider>
       <Router>
-        <AppContent darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+        <AppContent darkMode={darkMode} toggleDarkMode={() => setDarkMode((p) => !p)} />
       </Router>
     </AuthProvider>
   );
