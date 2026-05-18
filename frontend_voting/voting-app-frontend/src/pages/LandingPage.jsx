@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import API_BASE_URL from "../config";
-import "./LandingPage.css";
+import "../styles/LandingPage.css";
 
 const LandingPage = () => {
   const heroRef = useRef(null);
