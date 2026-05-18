@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API_BASE_URL from "../../config";
+import { useToast, ToastContainer } from "../../components/Toast";
 import "../../styles/VotePage.css";
 
 const VotePage = () => {
   const [candidates, setCandidates] = useState([]);
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [voting, setVoting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const { toasts, addToast, removeToast } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCandidates = async () => {
       try {
         const token = localStorage.getItem("token");
-        if (!token) { setError("Anda belum login."); return; }
+        if (!token) { addToast("Anda belum login.", "error"); return; }
         const response = await fetch(`${API_BASE_URL}/candidates`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -25,7 +26,11 @@ const VotePage = () => {
         const data = await response.json();
         setCandidates(data);
       } catch (err) {
-        setError(err.message);
+        if (err.message === "Failed to fetch") {
+          addToast("Ada kesalahan, mohon coba lagi.", "error");
+        } else {
+          addToast(err.message, "error");
+        }
       } finally {
         setLoading(false);
       }
@@ -47,20 +52,30 @@ const VotePage = () => {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       });
-      if (!response.ok) throw new Error("Gagal memberikan suara.");
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(errText || "Gagal memberikan suara.");
+      }
       setShowModal(false);
       setSuccess(true);
+      addToast("Suara berhasil diberikan! 🎉", "success");
     } catch (err) {
-      setError(err.message);
       setShowModal(false);
+      if (err.message === "Failed to fetch") {
+        addToast("Ada kesalahan, mohon coba lagi.", "error");
+      } else if (err.message.includes("sudah memberikan suara")) {
+        addToast("Anda sudah memberikan suara sebelumnya.", "warning");
+      } else {
+        addToast(err.message, "error");
+      }
     } finally {
       setVoting(false);
     }
   };
 
-  // Success Page
   if (success) return (
     <div className="vote-success-page">
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
       <div className="vote-success-card card animate-scaleIn">
         <div className="vote-success-icon">🎉</div>
         <h1>Suara Berhasil!</h1>
@@ -86,29 +101,21 @@ const VotePage = () => {
 
   return (
     <div className="vote-page">
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
       <div className="container">
-        {/* Header */}
         <div className="vote-header animate-fadeUp">
           <span className="section-tag">Pemilihan Aktif</span>
           <h1 className="vote-title">Pilih <span style={{ color: "var(--accent)" }}>Kandidat</span> Anda</h1>
           <p className="vote-desc">Pilih dengan bijak. Suara Anda hanya bisa diberikan satu kali dan tidak dapat diubah.</p>
         </div>
 
-        {error && (
-          <div className="vote-error animate-fadeUp">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-            {error}
-          </div>
-        )}
-
-        {candidates.length === 0 && !error && (
+        {candidates.length === 0 && (
           <div className="vote-empty">
             <span>🗳️</span>
             <p>Belum ada kandidat yang terdaftar.</p>
           </div>
         )}
 
-        {/* Candidate Grid */}
         <div className="vote-grid">
           {candidates.map((candidate, i) => (
             <div className={`vote-candidate-card card animate-fadeUp delay-${(i % 3) + 1}`} key={candidate.id}>
@@ -139,7 +146,6 @@ const VotePage = () => {
         </div>
       </div>
 
-      {/* Modal Konfirmasi */}
       {showModal && selectedCandidate && (
         <div className="vote-modal-overlay animate-fadeIn" onClick={() => !voting && setShowModal(false)}>
           <div className="vote-modal card animate-scaleIn" onClick={(e) => e.stopPropagation()}>

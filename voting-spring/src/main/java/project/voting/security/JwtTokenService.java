@@ -16,19 +16,17 @@ public class JwtTokenService {
     private static final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     private static final long EXPIRATION_TIME_MS = 3600000; // 1 hour
 
-    // Generate JWT Token
     public String generateToken(Voter voter) {
         return Jwts.builder()
                 .setSubject(voter.getEmail())
-                .claim("id", voter.getId()) // Include id attribute in token
-                .claim("isAdmin", voter.getIsAdmin()) // Include isAdmin attribute in token
+                .claim("id", voter.getId())
+                .claim("isAdmin", voter.getIsAdmin())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_MS))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // Extract Voter Information from Token
     public Voter getVoterFromToken(String token) {
         try {
             var claims = Jwts.parserBuilder()
@@ -38,21 +36,21 @@ public class JwtTokenService {
                     .getBody();
 
             String email = claims.getSubject();
-            boolean isAdmin = claims.get("isAdmin", Boolean.class); // Extract isAdmin attribute
+            boolean isAdmin = claims.get("isAdmin", Boolean.class);
+            // ✅ Ambil id dari token
+            int id = claims.get("id", Integer.class);
 
-            // Construct and return a Voter object with extracted details
             Voter voter = new Voter();
+            voter.setId(id); // ✅ Set id agar bisa dicari di database
             voter.setEmail(email);
             voter.setIsAdmin(isAdmin);
             return voter;
         } catch (Exception e) {
-            // Log the exception (optional)
             System.err.println("Invalid token: " + e.getMessage());
-            return null;  // Return null if the token is invalid or parsing fails
+            return null;
         }
     }
 
-    // Validate the token
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
@@ -61,7 +59,6 @@ public class JwtTokenService {
                 .parseClaimsJws(token);
             return true;
         } catch (Exception e) {
-            // Log the exception (optional)
             System.err.println("Token validation failed: " + e.getMessage());
             return false;
         }
