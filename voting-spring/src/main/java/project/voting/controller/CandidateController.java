@@ -34,27 +34,31 @@ public class CandidateController {
 
     // Vote for a candidate
     @PostMapping("/{id}/vote")
-    public ResponseEntity<?> voteForCandidate(
-            @RequestHeader("Authorization") String authHeader,
-            @PathVariable Integer id) {
-        String token = authHeader.replace("Bearer ", "");
-        if (!jwtTokenService.validateToken(token)) {
-            return ResponseEntity.status(401).body("Invalid or expired token."); // Unauthorized
-        }
-
-        // Extract voter information from token
-        Voter voter = jwtTokenService.getVoterFromToken(token);
-        if (voter == null) {
-            return ResponseEntity.status(403).body("Unable to extract voter details."); // Forbidden
-        }
-
-        try {
-            Candidate updatedCandidate = candidateService.voteForCandidate(id);
-            return ResponseEntity.ok(updatedCandidate);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(400).body(e.getMessage()); // Bad Request
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("An error occurred while voting."); // Internal Server Error
-        }
+public ResponseEntity<?> voteForCandidate(
+        @RequestHeader("Authorization") String authHeader,
+        @PathVariable Integer id) {
+    String token = authHeader.replace("Bearer ", "");
+    if (!jwtTokenService.validateToken(token)) {
+        return ResponseEntity.status(401).body("Invalid or expired token.");
     }
+
+    Voter voter = jwtTokenService.getVoterFromToken(token);
+    if (voter == null) {
+        return ResponseEntity.status(403).body("Unable to extract voter details.");
+    }
+
+    // ✅ Cek apakah sudah pernah vote
+    if (voter.getHasVoted()) {
+        return ResponseEntity.status(400).body("Anda sudah memberikan suara sebelumnya.");
+    }
+
+    try {
+        Candidate updatedCandidate = candidateService.voteForCandidate(id, voter);
+        return ResponseEntity.ok(updatedCandidate);
+    } catch (IllegalArgumentException e) {
+        return ResponseEntity.status(400).body(e.getMessage());
+    } catch (Exception e) {
+        return ResponseEntity.status(500).body("An error occurred while voting.");
+    }
+}
 }
