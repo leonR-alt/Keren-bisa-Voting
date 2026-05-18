@@ -228,7 +228,7 @@ const LandingPage = () => {
             </div>
           </div>
           <div className="footer-bottom">
-            <p>© 2025 VoteKu. Dibuat dengan ❤️ untuk demokrasi digital.</p>
+            <p>© 2026 VoteKu. Dibuat dengan ❤️ untuk demokrasi digital.</p>
           </div>
         </div>
       </footer>
