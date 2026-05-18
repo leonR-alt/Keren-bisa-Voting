@@ -1,114 +1,163 @@
 .voter-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(3, 7, 18, 0.75);
+  background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
-  padding: 20px;
+  z-index: 9999;
+  padding: 24px;
+  animation: fadeIn 0.2s ease;
 }
 
 .voter-modal {
   width: 100%;
   max-width: 480px;
-  background: #0f172a;
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  border-radius: 18px;
-  padding: 24px;
-  color: #e5e7eb;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(20px);
+  animation: scaleIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .voter-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 18px;
+  margin-bottom: 24px;
 }
 
 .voter-modal-header h2 {
-  margin: 0;
-  font-size: 22px;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
 }
 
 .voter-modal-close {
-  background: transparent;
-  border: none;
-  color: #94a3b8;
-  font-size: 30px;
+  width: 32px; height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  font-size: 1.2rem;
   cursor: pointer;
+  transition: var(--transition);
+}
+
+.voter-modal-close:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: var(--danger);
+  color: var(--danger);
 }
 
 .voter-modal-form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 .voter-modal-form label {
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  font-size: 14px;
-  color: #cbd5e1;
+  gap: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
 }
 
-.voter-modal-form input {
-  padding: 11px 13px;
-  border-radius: 10px;
-  border: 1px solid rgba(148, 163, 184, 0.3);
-  background: #020617;
-  color: #f8fafc;
+.voter-modal-form input[type="text"],
+.voter-modal-form input[type="email"],
+.voter-modal-form input[type="number"] {
+  padding: 11px 14px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border);
+  background: var(--bg-glass);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
   outline: none;
+  transition: var(--transition);
+  backdrop-filter: blur(10px);
 }
 
 .voter-modal-form input:focus {
-  border-color: #38bdf8;
+  border-color: var(--accent);
+  background: var(--bg-secondary);
+  box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
 .voter-modal-checks {
   display: flex;
-  gap: 18px;
-  margin-top: 5px;
+  gap: 20px;
+  padding: 14px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
 }
 
 .voter-modal-checks label {
   flex-direction: row;
   align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.voter-modal-checks input[type="checkbox"] {
+  width: 16px; height: 16px;
+  accent-color: var(--accent);
+  cursor: pointer;
 }
 
 .voter-modal-actions {
   display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 12px;
-}
-
-.btn-cancel,
-.btn-save {
-  border: none;
-  border-radius: 10px;
-  padding: 10px 16px;
-  cursor: pointer;
-  font-weight: 600;
+  gap: 10px;
+  margin-top: 8px;
 }
 
 .btn-cancel {
-  background: #334155;
-  color: #e2e8f0;
-}
-
-.btn-save {
-  background: #2563eb;
-  color: white;
-}
-
-.btn-save:hover {
-  background: #1d4ed8;
+  flex: 1;
+  padding: 11px 16px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border);
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
 }
 
 .btn-cancel:hover {
-  background: #475569;
+  background: var(--accent-light);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn-save {
+  flex: 1;
+  padding: 11px 16px;
+  border-radius: var(--radius-md);
+  border: none;
+  background: linear-gradient(135deg, var(--accent), #6b95ff);
+  color: white;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 4px 16px var(--accent-glow);
+}
+
+.btn-save:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px var(--accent-glow);
 }
