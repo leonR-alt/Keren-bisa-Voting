@@ -1,24 +1,43 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import "../styles/LandingPage.css";
+import API_BASE_URL from "../config";
+import "./LandingPage.css";
+
 const LandingPage = () => {
   const heroRef = useRef(null);
+  const [candidates, setCandidates] = useState([]);
+  const [totalVoters, setTotalVoters] = useState(null);
+
+  // Fetch real candidates for hero card
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (token) {
+          const res = await fetch(`${API_BASE_URL}/candidates`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (res.ok) {
+            const data = await res.json();
+            setCandidates(data.slice(0, 3));
+          }
+        }
+      } catch { /* silent */ }
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          }
-        });
-      },
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("visible"); }),
       { threshold: 0.1 }
     );
-
     document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, []);
+
+  const totalVotes = candidates.reduce((sum, c) => sum + (c.voteCount || 0), 0);
+  const maxVotes = Math.max(...candidates.map(c => c.voteCount || 0), 1);
 
   return (
     <div className="landing">
@@ -53,46 +72,64 @@ const LandingPage = () => {
                 Mulai Voting
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </Link>
-              <Link to="/login" className="btn btn-outline btn-lg">
-                Masuk
-              </Link>
+              <Link to="/login" className="btn btn-outline btn-lg">Masuk</Link>
             </div>
           </div>
 
           <div className="hero-right animate-fadeUp delay-2">
             <div className="hero-card-stack">
+              {/* Main Card — real data or placeholder */}
               <div className="floating-card card-main">
                 <div className="card-header">
                   <div className="card-avatar">🗳️</div>
                   <div>
-                    <div className="card-title">Pemilihan Aktif</div>
-                    <div className="card-sub">Berakhir dalam 2 hari</div>
+                    <div className="card-title">
+                      {candidates.length > 0 ? "Pemilihan Aktif" : "Belum Ada Pemilihan"}
+                    </div>
+                    <div className="card-sub">
+                      {candidates.length > 0 ? `${candidates.length} kandidat terdaftar` : "Nantikan pemilihan berikutnya"}
+                    </div>
                   </div>
                 </div>
-                <div className="card-candidates">
-                  {["Prabowo Mondardo", "Abah Anies", "Ganjar Sudah Dewasa"].map((name, i) => (
-                    <div className="candidate-row" key={i}>
-                      <div className="candidate-avatar">{name[0]}</div>
-                      <div className="candidate-info">
-                        <span>{name}</span>
-                        <div className="vote-bar">
-                          <div className="vote-fill" style={{ width: `${[65, 45, 30][i]}%` }} />
+
+                {candidates.length > 0 ? (
+                  <div className="card-candidates">
+                    {candidates.map((c) => {
+                      const pct = totalVotes > 0 ? Math.round((c.voteCount / totalVotes) * 100) : 0;
+                      return (
+                        <div className="candidate-row" key={c.id}>
+                          <div className="candidate-avatar">{c.name?.[0]}</div>
+                          <div className="candidate-info">
+                            <span>{c.name}</span>
+                            <div className="vote-bar">
+                              <div className="vote-fill" style={{ width: `${Math.round((c.voteCount || 0) / maxVotes * 100)}%` }} />
+                            </div>
+                          </div>
+                          <span className="vote-pct">{pct}%</span>
                         </div>
-                      </div>
-                      <span className="vote-pct">{[65, 45, 30][i]}%</span>
-                    </div>
-                  ))}
-                </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="card-empty">
+                    <span>📭</span>
+                    <p>Belum ada kandidat</p>
+                  </div>
+                )}
               </div>
+
+              {/* Stats Card */}
               <div className="floating-card card-stats">
                 <div className="stat-row">
-                  <span className="stat-icon">👥</span>
+                  <span className="stat-icon">🗳️</span>
                   <div>
-                    <div className="stat-num">999+</div>
-                    <div className="stat-lbl">Total Pemilih</div>
+                    <div className="stat-num">{totalVotes > 0 ? totalVotes : "—"}</div>
+                    <div className="stat-lbl">Total Suara</div>
                   </div>
                 </div>
               </div>
+
+              {/* Secure Badge — no animation, fixed position */}
               <div className="floating-card card-secure">
                 <span>🔐</span>
                 <span>Terenkripsi & Aman</span>
@@ -113,7 +150,6 @@ const LandingPage = () => {
           <h2 className="section-title">Dirancang untuk <span className="gradient-text">Kepercayaan</span></h2>
           <p className="section-desc">Sistem kami menggunakan teknologi terdepan untuk memastikan setiap suara aman dan terhitung.</p>
         </div>
-
         <div className="features-grid">
           {[
             { icon: "🔐", title: "Keamanan Tinggi", desc: "Enkripsi JWT dan hashing password memastikan data Anda selalu terlindungi dari ancaman." },
@@ -132,7 +168,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Steps Section */}
+      {/* Steps */}
       <section className="steps-section">
         <div className="container">
           <div className="section-header reveal">
@@ -156,13 +192,13 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* CTA */}
       <section className="cta-section container reveal">
         <div className="cta-card">
           <div className="cta-orb" />
           <span className="section-tag">Siap Berpartisipasi?</span>
           <h2>Bergabung Sekarang dan <span className="gradient-text">Suarakan Pilihan Anda</span></h2>
-          <p>Ribuan pemilih telah mempercayai platform kami. Giliran Anda!</p>
+          <p>Platform e-voting modern yang aman, transparan, dan dapat dipercaya.</p>
           <div className="cta-buttons">
             <Link to="/register" className="btn btn-primary btn-lg">
               Daftar Gratis
@@ -192,7 +228,7 @@ const LandingPage = () => {
             </div>
           </div>
           <div className="footer-bottom">
-            <p>© 2026 VoteKu. Dibuat sendiri dengan ❤️ untuk demokrasi digital.</p>
+            <p>© 2025 VoteKu. Dibuat dengan ❤️ untuk demokrasi digital.</p>
           </div>
         </div>
       </footer>

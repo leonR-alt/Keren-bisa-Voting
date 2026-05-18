@@ -211,3 +211,107 @@
   .vd-stats { grid-template-columns: 1fr; }
   .vd-header { flex-direction: column; align-items: flex-start; }
 }
+
+/* ===== HASIL VOTING SEMENTARA ===== */
+.vd-results { margin-bottom: 32px; }
+
+.vd-results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vd-result-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  position: relative;
+}
+
+.vd-result-rank {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  min-width: 28px;
+}
+
+.vd-result-avatar {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, var(--accent), #6b95ff);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: white;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.vd-result-info { flex: 1; }
+
+.vd-result-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.vd-result-top h3 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.vd-result-top p {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.vd-result-nums { text-align: right; }
+
+.vd-result-pct {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.03em;
+}
+
+.vd-result-count {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.vd-result-bar {
+  height: 6px;
+  background: var(--border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.vd-result-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #6b95ff);
+  border-radius: var(--radius-full);
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vd-result-winner {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.vd-no-votes {
+  padding: 32px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.vd-no-votes span { font-size: 2rem; }
