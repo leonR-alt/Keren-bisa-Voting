@@ -12,7 +12,6 @@ import ResultsPage from "./pages/admin/ResultsPage";
 import VotersPage from "./pages/admin/VotersPage";
 import VotePage from "./pages/voter/VotePage";
 import VoterDashboard from "./pages/voter/VoterDashboard";
-import API_BASE_URL from "./config";
 
 // ===== DECODE JWT (tanpa library) =====
 const decodeToken = (token) => {
