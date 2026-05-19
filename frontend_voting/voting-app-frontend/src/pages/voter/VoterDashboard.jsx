@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/AuthContext";
 import API_BASE_URL from "../../config";
@@ -11,42 +11,71 @@ const VoterDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
+  const [deadlineExpired, setDeadlineExpired] = useState(false);
+  const [noDeadline, setNoDeadline] = useState(false);
 
-  // Countdown 48 jam
+  // Fetch deadline dari backend lalu jalankan countdown
   useEffect(() => {
-    const deadline = new Date();
-    deadline.setHours(deadline.getHours() + 48);
-    const timer = setInterval(() => {
-      const diff = deadline - new Date();
-      if (diff <= 0) { clearInterval(timer); return; }
-      setTimeLeft({
-        hours: Math.floor(diff / (1000 * 60 * 60)),
-        minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
-        seconds: Math.floor((diff % (1000 * 60)) / 1000),
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+    const startCountdown = (deadlineTs) => {
+      const timer = setInterval(() => {
+        const diff = deadlineTs - Date.now();
+        if (diff <= 0) {
+          clearInterval(timer);
+          setDeadlineExpired(true);
+          setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
+          return;
+        }
+        setTimeLeft({
+          hours: Math.floor(diff / (1000 * 60 * 60)),
+          minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((diff % (1000 * 60)) / 1000),
+        });
+      }, 1000);
+      return timer;
+    };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!token) { setError("Token tidak ditemukan."); setLoading(false); return; }
+    let timer;
+    const fetchDeadline = async () => {
       try {
-        const [voterRes, candidateRes] = await Promise.all([
-          fetch(`${API_BASE_URL}/voters/me`, { headers: { Authorization: `Bearer ${token}` } }),
-          fetch(`${API_BASE_URL}/candidates`, { headers: { Authorization: `Bearer ${token}` } }),
-        ]);
-        if (!voterRes.ok) throw new Error("Gagal mengambil data profil.");
-        setVoterDetails(await voterRes.json());
-        if (candidateRes.ok) setCandidates(await candidateRes.json());
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+        const res = await fetch(`${API_BASE_URL}/admin/deadline`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.deadline) {
+            timer = startCountdown(data.deadline);
+          } else {
+            setNoDeadline(true);
+          }
+        } else {
+          setNoDeadline(true);
+        }
+      } catch {
+        setNoDeadline(true);
       }
     };
-    fetchData();
+    fetchDeadline();
+    return () => { if (timer) clearInterval(timer); };
+  }, []);
+
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    if (!token) { setError("Token tidak ditemukan."); setLoading(false); return; }
+    try {
+      const [voterRes, candidateRes] = await Promise.all([
+        fetch(`${API_BASE_URL}/voters/me`, { headers: { Authorization: `Bearer ${token}` } }),
+        fetch(`${API_BASE_URL}/candidates`, { headers: { Authorization: `Bearer ${token}` } }),
+      ]);
+      if (!voterRes.ok) throw new Error("Gagal mengambil data profil.");
+      setVoterDetails(await voterRes.json());
+      if (candidateRes.ok) setCandidates(await candidateRes.json());
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   }, [token]);
+
+  useEffect(() => { fetchData(); }, [fetchData]);
 
   if (loading) return (
     <div className="vd-loading">
@@ -59,7 +88,6 @@ const VoterDashboard = () => {
 
   const hasVoted = voterDetails?.hasVoted;
   const totalVotes = candidates.reduce((sum, c) => sum + (c.voteCount || 0), 0);
-  const maxVotes = Math.max(...candidates.map(c => c.voteCount || 0), 1);
 
   return (
     <div className="vd-page">
@@ -81,25 +109,36 @@ const VoterDashboard = () => {
 
         {/* Stats Grid */}
         <div className="vd-stats animate-fadeUp delay-1">
+
           {/* Countdown */}
           <div className="vd-stat-card card">
             <div className="vd-stat-icon">⏱️</div>
             <p className="vd-stat-label">Sisa Waktu Voting</p>
-            <div className="vd-countdown">
-              {[
-                { val: timeLeft.hours, lbl: "Jam" },
-                { val: timeLeft.minutes, lbl: "Menit" },
-                { val: timeLeft.seconds, lbl: "Detik" },
-              ].map((t, i) => (
-                <React.Fragment key={i}>
-                  {i > 0 && <span className="vd-time-sep">:</span>}
-                  <div className="vd-time-block">
-                    <span className="vd-time-num">{String(t.val).padStart(2, "0")}</span>
-                    <span className="vd-time-lbl">{t.lbl}</span>
-                  </div>
-                </React.Fragment>
-              ))}
-            </div>
+            {noDeadline ? (
+              <p className="vd-stat-sub" style={{ color: "var(--text-muted)", fontSize: "0.85rem", marginTop: 8 }}>
+                Belum ada deadline<br/>ditetapkan admin
+              </p>
+            ) : deadlineExpired ? (
+              <p className="vd-stat-sub" style={{ color: "var(--danger)", fontWeight: 700, marginTop: 8 }}>
+                ⛔ Voting telah berakhir
+              </p>
+            ) : (
+              <div className="vd-countdown">
+                {[
+                  { val: timeLeft.hours, lbl: "Jam" },
+                  { val: timeLeft.minutes, lbl: "Menit" },
+                  { val: timeLeft.seconds, lbl: "Detik" },
+                ].map((t, i) => (
+                  <React.Fragment key={i}>
+                    {i > 0 && <span className="vd-time-sep">:</span>}
+                    <div className="vd-time-block">
+                      <span className="vd-time-num">{String(t.val).padStart(2, "0")}</span>
+                      <span className="vd-time-lbl">{t.lbl}</span>
+                    </div>
+                  </React.Fragment>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Kandidat */}
@@ -114,17 +153,24 @@ const VoterDashboard = () => {
           <div className={`vd-stat-card card ${hasVoted ? "vd-voted" : "vd-not-voted"}`}>
             <div className="vd-stat-icon">{hasVoted ? "✅" : "🗳️"}</div>
             <p className="vd-stat-label">Status Anda</p>
-            <p className="vd-status-text">{hasVoted ? "Suara Anda Sudah Terhitung!" : "Anda Belum Memberikan Suara"}</p>
-            {!hasVoted && (
+            <p className="vd-status-text">
+              {hasVoted ? "Suara Anda Sudah Terhitung!" : "Anda Belum Memberikan Suara"}
+            </p>
+            {!hasVoted && !deadlineExpired && (
               <Link to="/vote" className="btn btn-primary vd-vote-btn">
                 Vote Sekarang
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </Link>
             )}
+            {!hasVoted && deadlineExpired && (
+              <p style={{ fontSize: "0.8rem", color: "var(--danger)", fontWeight: 600, marginTop: 8 }}>
+                ⛔ Waktu voting habis
+              </p>
+            )}
           </div>
         </div>
 
-        {/* Hasil Voting Sementara - SEMUA VOTER BISA LIHAT */}
+        {/* Hasil Voting Sementara */}
         {candidates.length > 0 && (
           <div className="vd-results animate-fadeUp delay-2">
             <div className="vd-section-header">
@@ -142,10 +188,7 @@ const VoterDashboard = () => {
                       <div className="vd-result-avatar">{c.name?.[0]}</div>
                       <div className="vd-result-info">
                         <div className="vd-result-top">
-                          <div>
-                            <h3>{c.name}</h3>
-                            <p>{c.party}</p>
-                          </div>
+                          <div><h3>{c.name}</h3><p>{c.party}</p></div>
                           <div className="vd-result-nums">
                             <span className="vd-result-pct">{pct}%</span>
                             <span className="vd-result-count">{c.voteCount || 0} suara</span>
@@ -155,9 +198,7 @@ const VoterDashboard = () => {
                           <div className="vd-result-fill" style={{ width: `${pct}%` }} />
                         </div>
                       </div>
-                      {i === 0 && totalVotes > 0 && (
-                        <div className="vd-result-winner">👑</div>
-                      )}
+                      {i === 0 && totalVotes > 0 && <div className="vd-result-winner">👑</div>}
                     </div>
                   );
                 })}
@@ -172,7 +213,7 @@ const VoterDashboard = () => {
         )}
 
         {/* Kandidat Preview */}
-        {candidates.length > 0 && !hasVoted && (
+        {candidates.length > 0 && !hasVoted && !deadlineExpired && (
           <div className="vd-candidates animate-fadeUp delay-3">
             <div className="vd-section-header">
               <h2>Kandidat Pemilihan</h2>

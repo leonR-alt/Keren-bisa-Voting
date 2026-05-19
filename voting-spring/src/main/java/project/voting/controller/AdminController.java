@@ -8,11 +8,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 import project.voting.security.JwtTokenService;
 
 @RestController
 @RequestMapping("/admin")
+@CrossOrigin
 public class AdminController {
 
     @Autowired
@@ -21,18 +25,44 @@ public class AdminController {
     @Autowired
     private JwtTokenService jwtTokenService;
 
-    // Utility method to validate admin role
+    // Simpan deadline voting di memory (persisten selama server hidup)
+    private static final AtomicReference<Long> votingDeadline = new AtomicReference<>(null);
+
     private boolean isAdmin(String token) {
         Voter voter = jwtTokenService.getVoterFromToken(token);
-        return voter != null && voter.getIsAdmin(); // Ensure isAdmin() exists in the Voter entity
+        return voter != null && voter.getIsAdmin();
     }
 
-    // Voter Management
+    // ===== DEADLINE VOTING =====
+    @GetMapping("/deadline")
+    public ResponseEntity<Map<String, Object>> getDeadline() {
+        Map<String, Object> res = new HashMap<>();
+        res.put("deadline", votingDeadline.get());
+        return ResponseEntity.ok(res);
+    }
+
+    @PostMapping("/deadline")
+    public ResponseEntity<Map<String, Object>> setDeadline(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody Map<String, Long> body) {
+        String token = authHeader.replace("Bearer ", "");
+        if (!jwtTokenService.validateToken(token) || !isAdmin(token)) {
+            return ResponseEntity.status(403).build();
+        }
+        Long deadline = body.get("deadline");
+        votingDeadline.set(deadline);
+        Map<String, Object> res = new HashMap<>();
+        res.put("deadline", deadline);
+        res.put("message", "Deadline berhasil diset");
+        return ResponseEntity.ok(res);
+    }
+
+    // ===== VOTER MANAGEMENT =====
     @GetMapping("/voters")
     public ResponseEntity<List<Voter>> getAllVoters(@RequestHeader("Authorization") String authHeader) {
         String token = authHeader.replace("Bearer ", "");
         if (!jwtTokenService.validateToken(token) || !isAdmin(token)) {
-            return ResponseEntity.status(403).body(null); // 403 Forbidden for non-admin users
+            return ResponseEntity.status(403).body(null);
         }
         return ResponseEntity.ok(adminService.getAllVoters());
     }
@@ -44,7 +74,7 @@ public class AdminController {
             @RequestBody Voter updatedVoter) {
         String token = authHeader.replace("Bearer ", "");
         if (!jwtTokenService.validateToken(token) || !isAdmin(token)) {
-            return ResponseEntity.status(403).build(); // 403 Forbidden for non-admin users
+            return ResponseEntity.status(403).build();
         }
         return ResponseEntity.ok(adminService.updateVoter(id, updatedVoter));
     }
@@ -55,20 +85,20 @@ public class AdminController {
             @PathVariable Integer id) {
         String token = authHeader.replace("Bearer ", "");
         if (!jwtTokenService.validateToken(token) || !isAdmin(token)) {
-            return ResponseEntity.status(403).build(); // 403 Forbidden for non-admin users
+            return ResponseEntity.status(403).build();
         }
         adminService.deleteVoter(id);
         return ResponseEntity.ok("Voter deleted successfully");
     }
 
-    // Candidate Management
+    // ===== CANDIDATE MANAGEMENT =====
     @PostMapping("/candidates")
     public ResponseEntity<Candidate> addCandidate(
             @RequestHeader("Authorization") String authHeader,
             @RequestBody Candidate candidate) {
         String token = authHeader.replace("Bearer ", "");
         if (!jwtTokenService.validateToken(token) || !isAdmin(token)) {
-            return ResponseEntity.status(403).build(); // 403 Forbidden for non-admin users
+            return ResponseEntity.status(403).build();
         }
         return ResponseEntity.ok(adminService.addCandidate(candidate));
     }
@@ -80,7 +110,7 @@ public class AdminController {
             @RequestBody Candidate updatedCandidate) {
         String token = authHeader.replace("Bearer ", "");
         if (!jwtTokenService.validateToken(token) || !isAdmin(token)) {
-            return ResponseEntity.status(403).build(); // 403 Forbidden for non-admin users
+            return ResponseEntity.status(403).build();
         }
         return ResponseEntity.ok(adminService.updateCandidate(id, updatedCandidate));
     }
@@ -91,18 +121,18 @@ public class AdminController {
             @PathVariable Integer id) {
         String token = authHeader.replace("Bearer ", "");
         if (!jwtTokenService.validateToken(token) || !isAdmin(token)) {
-            return ResponseEntity.status(403).build(); // 403 Forbidden for non-admin users
+            return ResponseEntity.status(403).build();
         }
         adminService.deleteCandidate(id);
         return ResponseEntity.ok("Candidate deleted successfully");
     }
 
-    // View Results
+    // ===== RESULTS =====
     @GetMapping("/results")
     public ResponseEntity<List<Candidate>> getResults(@RequestHeader("Authorization") String authHeader) {
         String token = authHeader.replace("Bearer ", "");
         if (!jwtTokenService.validateToken(token) || !isAdmin(token)) {
-            return ResponseEntity.status(403).body(null); // 403 Forbidden for non-admin users
+            return ResponseEntity.status(403).body(null);
         }
         return ResponseEntity.ok(adminService.getResults());
     }

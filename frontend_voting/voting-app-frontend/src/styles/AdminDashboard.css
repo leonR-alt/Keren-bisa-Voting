@@ -117,3 +117,82 @@
   from { width: 0; opacity: 0; }
   to { width: 60px; opacity: 1; }
 }
+
+/* ===== DEADLINE CARD ===== */
+.deadline-card {
+  width: 100%;
+  max-width: 520px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-md);
+  padding: 28px 32px;
+  margin-top: 24px;
+  animation: fadeSlideUp 0.6s ease 0.4s both;
+}
+
+.deadline-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+.deadline-current {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px;
+  background: var(--accent-light);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+  font-size: 0.875rem;
+}
+
+.deadline-current span {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+
+.deadline-current strong {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.deadline-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.deadline-form input[type="datetime-local"] {
+  width: 100%;
+  padding: 12px 16px 12px 42px;
+  background: var(--bg-glass);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  outline: none;
+  transition: var(--transition);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+}
+
+.deadline-form input[type="datetime-local"]:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+/* Fix dark mode datetime input */
+[data-theme="dark"] .deadline-form input[type="datetime-local"] {
+  color-scheme: dark;
+}

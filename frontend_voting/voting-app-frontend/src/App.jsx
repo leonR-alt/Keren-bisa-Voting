@@ -12,6 +12,7 @@ import ResultsPage from "./pages/admin/ResultsPage";
 import VotersPage from "./pages/admin/VotersPage";
 import VotePage from "./pages/voter/VotePage";
 import VoterDashboard from "./pages/voter/VoterDashboard";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
 // ===== DECODE JWT (tanpa library) =====
 const decodeToken = (token) => {
@@ -84,6 +85,7 @@ const AppContent = ({ darkMode, toggleDarkMode }) => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
         {/* Voter only */}
         <Route path="/voter" element={<VoterRoute><VoterDashboard /></VoterRoute>} />
