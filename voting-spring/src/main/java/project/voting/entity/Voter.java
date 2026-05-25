@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size;
 public class Voter {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @NotBlank(message = "Name is required")
