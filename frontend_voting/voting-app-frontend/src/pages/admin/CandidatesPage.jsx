@@ -102,7 +102,26 @@ const CandidatesPage = () => {
           title: electionInfo.title,
         }),
       });
-
+      
+// Reset hasVoted semua voter
+const votersRes = await fetch(`${API_BASE_URL}/admin/voters`, {
+  headers: { Authorization: `Bearer ${token}` },
+});
+if (votersRes.ok) {
+  const allVoters = await votersRes.json();
+  for (const v of allVoters) {
+    await fetch(`${API_BASE_URL}/admin/voters/${v.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({
+        name: v.name,
+        email: v.email,
+        isAdmin: v.isAdmin,
+        hasVoted: false,
+      }),
+    });
+  }
+}
       // Hapus kandidat lama dulu
       for (const c of candidates) {
         await fetch(`${API_BASE_URL}/admin/candidates/${c.id}`, {

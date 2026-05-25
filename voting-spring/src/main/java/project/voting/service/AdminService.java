@@ -29,6 +29,7 @@ public class AdminService {
             voter.setPassword(updatedVoter.getPassword());
         }
         voter.setIsAdmin(updatedVoter.getIsAdmin());
+        voter.setHasVoted(updatedVoter.getHasVoted());
         return voterRepository.save(voter);
     }
 
