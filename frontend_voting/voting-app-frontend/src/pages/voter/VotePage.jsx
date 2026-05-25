@@ -7,6 +7,7 @@ import "../../styles/VotePage.css";
 const VotePage = () => {
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [electionTitle, setElectionTitle] = useState("");
   const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [voting, setVoting] = useState(false);
@@ -15,6 +16,15 @@ const VotePage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Fetch election title
+    const fetchInfo = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/admin/deadline`);
+        if (res.ok) { const d = await res.json(); setElectionTitle(d.title || ""); }
+      } catch {}
+    };
+    fetchInfo();
+
     const fetchCandidates = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -104,7 +114,7 @@ const VotePage = () => {
       <ToastContainer toasts={toasts} removeToast={removeToast} />
       <div className="container">
         <div className="vote-header animate-fadeUp">
-          <span className="section-tag">Pemilihan Aktif</span>
+          {electionTitle ? <span className="section-tag">🗳️ {electionTitle}</span> : <span className="section-tag">Pemilihan Aktif</span>}
           <h1 className="vote-title">Pilih <span style={{ color: "var(--accent)" }}>Kandidat</span> Anda</h1>
           <p className="vote-desc">Pilih dengan bijak. Suara Anda hanya bisa diberikan satu kali dan tidak dapat diubah.</p>
         </div>

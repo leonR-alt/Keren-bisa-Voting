@@ -6,54 +6,56 @@ import project.voting.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import project.voting.security.JwtTokenService;
 
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
-import project.voting.security.JwtTokenService;
-
 @RestController
 @RequestMapping("/admin")
 @CrossOrigin
 public class AdminController {
 
-    @Autowired
-    private AdminService adminService;
+    @Autowired private AdminService adminService;
+    @Autowired private JwtTokenService jwtTokenService;
 
-    @Autowired
-    private JwtTokenService jwtTokenService;
-
-    // Simpan deadline voting di memory (persisten selama server hidup)
+    // Simpan deadline + judul di memory
     private static final AtomicReference<Long> votingDeadline = new AtomicReference<>(null);
+    private static final AtomicReference<String> electionTitle = new AtomicReference<>("");
 
     private boolean isAdmin(String token) {
         Voter voter = jwtTokenService.getVoterFromToken(token);
         return voter != null && voter.getIsAdmin();
     }
 
-    // ===== DEADLINE VOTING =====
+    // ===== DEADLINE + JUDUL =====
     @GetMapping("/deadline")
     public ResponseEntity<Map<String, Object>> getDeadline() {
         Map<String, Object> res = new HashMap<>();
         res.put("deadline", votingDeadline.get());
+        res.put("title", electionTitle.get());
         return ResponseEntity.ok(res);
     }
 
     @PostMapping("/deadline")
     public ResponseEntity<Map<String, Object>> setDeadline(
             @RequestHeader("Authorization") String authHeader,
-            @RequestBody Map<String, Long> body) {
+            @RequestBody Map<String, Object> body) {
         String token = authHeader.replace("Bearer ", "");
-        if (!jwtTokenService.validateToken(token) || !isAdmin(token)) {
+        if (!jwtTokenService.validateToken(token) || !isAdmin(token))
             return ResponseEntity.status(403).build();
-        }
-        Long deadline = body.get("deadline");
+
+        Long deadline = body.get("deadline") != null ? ((Number) body.get("deadline")).longValue() : null;
+        String title = body.get("title") != null ? body.get("title").toString() : "";
+
         votingDeadline.set(deadline);
+        electionTitle.set(title);
+
         Map<String, Object> res = new HashMap<>();
         res.put("deadline", deadline);
-        res.put("message", "Deadline berhasil diset");
+        res.put("title", title);
         return ResponseEntity.ok(res);
     }
 
@@ -61,21 +63,18 @@ public class AdminController {
     @GetMapping("/voters")
     public ResponseEntity<List<Voter>> getAllVoters(@RequestHeader("Authorization") String authHeader) {
         String token = authHeader.replace("Bearer ", "");
-        if (!jwtTokenService.validateToken(token) || !isAdmin(token)) {
+        if (!jwtTokenService.validateToken(token) || !isAdmin(token))
             return ResponseEntity.status(403).body(null);
-        }
         return ResponseEntity.ok(adminService.getAllVoters());
     }
 
     @PutMapping("/voters/{id}")
     public ResponseEntity<Voter> updateVoter(
             @RequestHeader("Authorization") String authHeader,
-            @PathVariable Integer id,
-            @RequestBody Voter updatedVoter) {
+            @PathVariable Integer id, @RequestBody Voter updatedVoter) {
         String token = authHeader.replace("Bearer ", "");
-        if (!jwtTokenService.validateToken(token) || !isAdmin(token)) {
+        if (!jwtTokenService.validateToken(token) || !isAdmin(token))
             return ResponseEntity.status(403).build();
-        }
         return ResponseEntity.ok(adminService.updateVoter(id, updatedVoter));
     }
 
@@ -84,11 +83,10 @@ public class AdminController {
             @RequestHeader("Authorization") String authHeader,
             @PathVariable Integer id) {
         String token = authHeader.replace("Bearer ", "");
-        if (!jwtTokenService.validateToken(token) || !isAdmin(token)) {
+        if (!jwtTokenService.validateToken(token) || !isAdmin(token))
             return ResponseEntity.status(403).build();
-        }
         adminService.deleteVoter(id);
-        return ResponseEntity.ok("Voter deleted successfully");
+        return ResponseEntity.ok("Deleted");
     }
 
     // ===== CANDIDATE MANAGEMENT =====
@@ -97,21 +95,18 @@ public class AdminController {
             @RequestHeader("Authorization") String authHeader,
             @RequestBody Candidate candidate) {
         String token = authHeader.replace("Bearer ", "");
-        if (!jwtTokenService.validateToken(token) || !isAdmin(token)) {
+        if (!jwtTokenService.validateToken(token) || !isAdmin(token))
             return ResponseEntity.status(403).build();
-        }
         return ResponseEntity.ok(adminService.addCandidate(candidate));
     }
 
     @PutMapping("/candidates/{id}")
     public ResponseEntity<Candidate> updateCandidate(
             @RequestHeader("Authorization") String authHeader,
-            @PathVariable Integer id,
-            @RequestBody Candidate updatedCandidate) {
+            @PathVariable Integer id, @RequestBody Candidate updatedCandidate) {
         String token = authHeader.replace("Bearer ", "");
-        if (!jwtTokenService.validateToken(token) || !isAdmin(token)) {
+        if (!jwtTokenService.validateToken(token) || !isAdmin(token))
             return ResponseEntity.status(403).build();
-        }
         return ResponseEntity.ok(adminService.updateCandidate(id, updatedCandidate));
     }
 
@@ -120,20 +115,18 @@ public class AdminController {
             @RequestHeader("Authorization") String authHeader,
             @PathVariable Integer id) {
         String token = authHeader.replace("Bearer ", "");
-        if (!jwtTokenService.validateToken(token) || !isAdmin(token)) {
+        if (!jwtTokenService.validateToken(token) || !isAdmin(token))
             return ResponseEntity.status(403).build();
-        }
         adminService.deleteCandidate(id);
-        return ResponseEntity.ok("Candidate deleted successfully");
+        return ResponseEntity.ok("Deleted");
     }
 
     // ===== RESULTS =====
     @GetMapping("/results")
     public ResponseEntity<List<Candidate>> getResults(@RequestHeader("Authorization") String authHeader) {
         String token = authHeader.replace("Bearer ", "");
-        if (!jwtTokenService.validateToken(token) || !isAdmin(token)) {
+        if (!jwtTokenService.validateToken(token) || !isAdmin(token))
             return ResponseEntity.status(403).body(null);
-        }
         return ResponseEntity.ok(adminService.getResults());
     }
 }
