@@ -102,7 +102,7 @@ const CandidatesPage = () => {
           title: electionInfo.title,
         }),
       });
-      
+
 // Reset hasVoted semua voter
 const votersRes = await fetch(`${API_BASE_URL}/admin/voters`, {
   headers: { Authorization: `Bearer ${token}` },
@@ -251,7 +251,7 @@ if (votersRes.ok) {
                     <div className="wizard-actions">
                       <button type="button" className="btn btn-outline" onClick={() => setStep(null)}>Batal</button>
                       <button type="submit" className="btn btn-primary">
-                        Lanjut — Isi Kandidat
+                        Lanjut Isi Kandidat
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                       </button>
                     </div>
