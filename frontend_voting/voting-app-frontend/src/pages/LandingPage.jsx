@@ -12,15 +12,10 @@ const LandingPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem("token");
-        if (token) {
-          const res = await fetch(`${API_BASE_URL}/candidates`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          if (res.ok) {
-            const data = await res.json();
-            setCandidates(data.slice(0, 3));
-          }
+        const res = await fetch(`${API_BASE_URL}/candidates`);
+        if (res.ok) {
+          const data = await res.json();
+          setCandidates(data.slice(0, 3));
         }
       } catch { /* silent */ }
     };

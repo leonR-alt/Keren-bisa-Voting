@@ -20,45 +20,40 @@ public class CandidateController {
     @Autowired
     private JwtTokenService jwtTokenService;
 
-    // Get all candidates
+    // ✅ Public endpoint — tidak butuh token
+    // Dipakai landing page dan voter dashboard
     @GetMapping
     public ResponseEntity<List<Candidate>> getAllCandidates(
-            @RequestHeader("Authorization") String authHeader) {
-        String token = authHeader.replace("Bearer ", "");
-        if (!jwtTokenService.validateToken(token)) {
-            return ResponseEntity.status(401).body(null); // Unauthorized
-        }
-
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
         return ResponseEntity.ok(candidateService.getAllCandidates());
     }
 
-    // Vote for a candidate
+    // Vote — wajib token
     @PostMapping("/{id}/vote")
-public ResponseEntity<?> voteForCandidate(
-        @RequestHeader("Authorization") String authHeader,
-        @PathVariable Integer id) {
-    String token = authHeader.replace("Bearer ", "");
-    if (!jwtTokenService.validateToken(token)) {
-        return ResponseEntity.status(401).body("Invalid or expired token.");
-    }
+    public ResponseEntity<?> voteForCandidate(
+            @RequestHeader("Authorization") String authHeader,
+            @PathVariable Integer id) {
+        String token = authHeader.replace("Bearer ", "");
+        if (!jwtTokenService.validateToken(token)) {
+            return ResponseEntity.status(401).body("Invalid or expired token.");
+        }
 
-    Voter voter = jwtTokenService.getVoterFromToken(token);
-    if (voter == null) {
-        return ResponseEntity.status(403).body("Unable to extract voter details.");
-    }
+        Voter voter = jwtTokenService.getVoterFromToken(token);
+        if (voter == null) {
+            return ResponseEntity.status(403).body("Unable to extract voter details.");
+        }
 
-    // ✅ Cek apakah sudah pernah vote
-    if (voter.getHasVoted()) {
-        return ResponseEntity.status(400).body("Anda sudah memberikan suara sebelumnya.");
-    }
+        if (voter.getHasVoted()) {
+            return ResponseEntity.status(400).body("Anda sudah memberikan suara sebelumnya.");
+        }
 
-    try {
-        Candidate updatedCandidate = candidateService.voteForCandidate(id, voter);
-        return ResponseEntity.ok(updatedCandidate);
-    } catch (IllegalArgumentException e) {
-        return ResponseEntity.status(400).body(e.getMessage());
-    } catch (Exception e) {
-        return ResponseEntity.status(500).body("An error occurred while voting.");
+        try {
+            Candidate updatedCandidate = candidateService.voteForCandidate(id, voter);
+            return ResponseEntity.ok(updatedCandidate);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("An error occurred while voting.");
+        }
     }
-}
 }
