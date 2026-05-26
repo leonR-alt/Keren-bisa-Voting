@@ -1,99 +1,158 @@
-# Online Voting System ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white) ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB) ![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white) [![License: MIT][License-Badge]](LICENSE.md)
-## Project Description
-The Online Voting System is a web application that allows users to register, log in, and vote for candidates in an election. The system includes both a frontend and a backend, providing a complete solution for managing elections online.
+# 🗳️ VoteKu — Modern Web-Based E-Voting Platform
 
-## Features
-- User registration and login
-- Admin dashboard for managing voters and candidates
-- Voter dashboard for viewing profile and voting
-- Real-time vote counting and results display
-- Secure authentication using JWT tokens ![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white)
+VoteKu is a modern electronic voting platform designed to provide a secure, fast, and user-friendly online voting experience.  
+Built with React and Spring Boot, this system supports online voting, candidate management, admin management, voting deadlines, and real-time election results.
 
-## Technologies Used
-- Frontend: React, Vite, React Router
-- Backend: Spring Boot, JPA, MySQL , JWT
+---
 
-## Setup Instructions
+## 🇺🇸 English
 
-### Backend Setup
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Polymath-Saksh/Online-Voting-System.git
-   cd Online-Voting-System/voting-spring
-   ```
+### ✨ Key Features
 
-2. Configure the database:
-   - Create a MySQL database named `voting_system`.
-   - Update the `application.properties` file with your database credentials.
+#### User
+- Register and login
+- Secure authentication system
+- View candidate list
+- Vote only once
+- View voting results
+- Election countdown timer
+- Responsive modern interface
 
-3. Build and run the backend:
-   ```bash
-   ./mvnw spring-boot:run
-   ```
+#### Admin
+- Add, edit, and delete candidates
+- Manage voter accounts
+- Set election title
+- Set voting deadline
+- View election results
+- Protected admin dashboard
 
-### Frontend Setup
-1. Navigate to the frontend directory:
-   ```bash
-   cd ../frontend_voting/voting-app-frontend
-   ```
+#### Security
+- JWT Authentication
+- Protected admin routes
+- Super Admin protection
+- One-person one-vote validation
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+---
 
-3. Run the frontend:
-   ```bash
-   npm run dev
-   ```
+## 🇮🇩 Bahasa Indonesia
 
-## Backend API Endpoints
+### ✨ Fitur Utama
 
-### Voter Endpoints
-- `POST /voters/register`: Register a new voter
-- `POST /voters/login`: Login a voter and issue a JWT token
-- `GET /voters/me`: Get logged-in voter details
-- `PUT /voters/{id}`: Update voter details
+#### User
+- Register dan login akun
+- Sistem autentikasi yang aman
+- Melihat daftar kandidat
+- Melakukan voting satu kali
+- Melihat hasil voting
+- Countdown waktu pemilihan
+- Tampilan modern dan responsif
 
-### Admin Endpoints
-- `GET /admin/voters`: Get all voters
-- `PUT /admin/voters/{id}`: Update voter details
-- `DELETE /admin/voters/{id}`: Delete a voter
-- `POST /admin/candidates`: Add a new candidate
-- `PUT /admin/candidates/{id}`: Update candidate details
-- `DELETE /admin/candidates/{id}`: Delete a candidate
-- `GET /admin/results`: Get election results
+#### Admin
+- Menambah, mengedit, dan menghapus kandidat
+- Mengelola akun voter
+- Mengatur judul pemilihan
+- Mengatur deadline voting
+- Melihat hasil pemilihan
+- Dashboard admin yang terproteksi
 
-### Candidate Endpoints
-- `GET /candidates`: Get all candidates
-- `POST /candidates/{id}/vote`: Vote for a candidate
+#### Security
+- JWT Authentication
+- Protected admin routes
+- Proteksi Super Admin
+- Validasi satu orang satu suara
 
-## Frontend Structure
-- `src/components`: Contains reusable components like `Header`, `HomePage`, `Table`, etc.
-- `src/pages`: Contains page components like `LoginPage`, `RegisterPage`, `AdminDashboard`, `VoterDashboard`, etc.
-- `src/styles`: Contains CSS files for styling the components and pages.
+---
 
-## Usage Instructions
-1. Register a new voter using the registration page.
-2. Log in with the registered email and password.
-3. Admin users can access the admin dashboard to manage voters and candidates.
-4. Voter users can access the voter dashboard to view their profile and vote for candidates.
-5. View the election results on the results page.
+## 🧩 Technology Stack
 
-## Contributing
-We welcome contributions to the Online Voting System project. To contribute, please follow these guidelines:
-1. Fork the repository.
-2. Create a new branch for your feature or bug fix.
-3. Commit your changes and push them to your forked repository.
-4. Create a pull request with a detailed description of your changes.
+### Frontend
+- React
+- Vite
+- React Router DOM
+- CSS
 
-## Authors
+### Backend
+- Spring Boot
+- Spring Security
+- JWT
+- Hibernate / JPA
+- Maven
 
-- [Saksham Kumar](https://github.com/Polymath-Saksh)
-- [Ankit Raj](https://github.com/ankitraj5670)
+### Database
+- MySQL
+- Aiven Cloud Database
 
-## License
+### Deployment
+- Vercel
+- Render
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+---
 
-[License-Badge]:https://img.shields.io/badge/License-MIT-blue.svg
+## 📁 Project Structure
+
+
+Keren-bisa-Voting/
+│
+├── frontend_voting/
+│   └── voting-app-frontend/
+│
+└── voting-spring/
+
+
+
+### ⚙️ Installation Guide
+Clone Repository
+```bash
+git clone https://github.com/leonR-alt/Keren-bisa-Voting.git
+```
+
+🚀 Frontend Setup
+```bash
+cd frontend_voting/voting-app-frontend
+npm install
+npm run dev
+```
+
+Frontend berjalan di:
+http://localhost:5173
+
+🚀 Backend Setup
+```bash
+cd voting-spring
+mvnw.cmd spring-boot:run
+```
+
+Backend berjalan di:
+http://localhost:8080
+
+## 🌐 Live Demo
+### Frontend
+
+https://keren-bisa-voting.vercel.app
+
+### Backend
+
+https://keren-bisa-voting.onrender.com
+
+🔐 Super Admin Protection
+
+Super Admin memiliki proteksi khusus:
+
+Tidak bisa dihapus
+Tidak bisa diturunkan dari admin
+Hanya dirinya sendiri yang bisa mengedit akun
+
+## 📌 Future Improvements
+Multiple election system
+Upload foto kandidat
+Cloudinary integration
+Statistik voting
+Export hasil voting
+Forgot password feature
+
+# 👨‍💻 Developer
+
+Developed by Leonaris Rumahorbo
+
+GitHub:
+https://github.com/leonR-alt
