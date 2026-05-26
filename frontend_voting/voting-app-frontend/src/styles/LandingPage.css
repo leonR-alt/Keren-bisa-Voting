@@ -139,7 +139,7 @@
 /* ===== HERO CARD STACK ===== */
 .hero-right { display: flex; justify-content: center; align-items: center; }
 
-.hero-card-stack { position: relative; width: 340px; height: 420px; }
+.hero-card-stack { position: relative; width: 380px; height: 460px; }
 
 .floating-card {
   position: absolute;
@@ -152,14 +152,19 @@
   animation: float 6s ease-in-out infinite;
 }
 
-.card-main { width: 300px; top: 20px; left: 20px; z-index: 3; }
+.card-main { width: 340px; top: 20px; left: 10px; z-index: 3; }
 .card-stats { width: 180px; bottom: 40px; right: -10px; animation-delay: 2s; z-index: 4; }
 .card-secure { width: 190px; bottom: -20px; right: -20px; animation-delay: 4s; z-index: 2; display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); padding: 12px 16px; }
 
 .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-.card-avatar { width: 40px; height: 40px; background: var(--accent-light); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
-.card-title { font-weight: 700; font-size: 0.9rem; letter-spacing: -0.02em; }
-.card-sub { font-size: 0.75rem; color: var(--text-muted); }
+.card-avatar { width: 44px; height: 44px; background: var(--accent-light); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+.card-title { 
+  font-weight: 800; 
+  font-size: 1rem; 
+  letter-spacing: -0.02em;
+  color: var(--accent);
+}
+.card-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
 .card-candidates { display: flex; flex-direction: column; gap: 12px; }
 .candidate-row { display: flex; align-items: center; gap: 10px; }
 .candidate-avatar { width: 28px; height: 28px; background: linear-gradient(135deg, var(--accent), #6b95ff); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: white; flex-shrink: 0; }

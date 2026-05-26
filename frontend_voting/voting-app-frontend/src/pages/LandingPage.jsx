@@ -7,15 +7,23 @@ const LandingPage = () => {
   const heroRef = useRef(null);
   const [candidates, setCandidates] = useState([]);
   const [totalVoters, setTotalVoters] = useState(null);
+  const [electionTitle, setElectionTitle] = useState("");
 
   // Fetch real candidates for hero card
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/candidates`);
-        if (res.ok) {
-          const data = await res.json();
+        const [candidateRes, infoRes] = await Promise.all([
+          fetch(`${API_BASE_URL}/candidates`),
+          fetch(`${API_BASE_URL}/admin/deadline`),
+        ]);
+        if (candidateRes.ok) {
+          const data = await candidateRes.json();
           setCandidates(data.slice(0, 3));
+        }
+        if (infoRes.ok) {
+          const info = await infoRes.json();
+          setElectionTitle(info.title || "");
         }
       } catch { /* silent */ }
     };
@@ -79,7 +87,7 @@ const LandingPage = () => {
                   <div className="card-avatar">🗳️</div>
                   <div>
                     <div className="card-title">
-                      {candidates.length > 0 ? "Pemilihan Aktif" : "Belum Ada Pemilihan"}
+                      {candidates.length > 0 ? (electionTitle || "Pemilihan Aktif") : "Belum Ada Pemilihan"}
                     </div>
                     <div className="card-sub">
                       {candidates.length > 0 ? `${candidates.length} kandidat terdaftar` : "Nantikan pemilihan berikutnya"}
@@ -149,7 +157,7 @@ const LandingPage = () => {
           {[
             { icon: "🔐", title: "Keamanan Tinggi", desc: "Enkripsi JWT dan hashing password memastikan data Anda selalu terlindungi dari ancaman." },
             { icon: "⚡", title: "Real-time Results", desc: "Lihat hasil voting secara langsung dengan visualisasi grafik yang mudah dipahami." },
-            { icon: "📱", title: "Responsif", desc: "Dapat diakses dari perangkat apapun — desktop, tablet, maupun smartphone." },
+            { icon: "📱", title: "Responsif", desc: "Dapat diakses dari perangkat apapun desktop, tablet, maupun smartphone." },
             { icon: "🌐", title: "Transparan", desc: "Setiap suara tercatat dan dapat diverifikasi oleh admin untuk memastikan integritas." },
             { icon: "🚫", title: "Anti Double Vote", desc: "Sistem cerdas mencegah pemilih memberikan suara lebih dari satu kali." },
             { icon: "👤", title: "Role Based", desc: "Kontrol akses berbasis peran memisahkan hak admin dan pemilih dengan jelas." },
