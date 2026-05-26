@@ -3,6 +3,7 @@ package project.voting.controller;
 import project.voting.entity.Candidate;
 import project.voting.entity.Voter;
 import project.voting.service.AdminService;
+import project.voting.repository.VoterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,14 +21,26 @@ public class AdminController {
 
     @Autowired private AdminService adminService;
     @Autowired private JwtTokenService jwtTokenService;
+    @Autowired private VoterRepository voterRepository;
 
-    // Simpan deadline + judul di memory
+    // ✅ Email super admin — tidak bisa dihapus/diturunkan oleh siapapun
+    private static final String SUPER_ADMIN_EMAIL = "leonarisrumahorbo@gmail.com";
+
     private static final AtomicReference<Long> votingDeadline = new AtomicReference<>(null);
     private static final AtomicReference<String> electionTitle = new AtomicReference<>("");
 
     private boolean isAdmin(String token) {
         Voter voter = jwtTokenService.getVoterFromToken(token);
         return voter != null && voter.getIsAdmin();
+    }
+
+    private boolean isSuperAdmin(String token) {
+        Voter voter = jwtTokenService.getVoterFromToken(token);
+        return voter != null && SUPER_ADMIN_EMAIL.equals(voter.getEmail());
+    }
+
+    private boolean isSuperAdminEmail(String email) {
+        return SUPER_ADMIN_EMAIL.equals(email);
     }
 
     // ===== DEADLINE + JUDUL =====
@@ -69,22 +82,41 @@ public class AdminController {
     }
 
     @PutMapping("/voters/{id}")
-    public ResponseEntity<Voter> updateVoter(
+    public ResponseEntity<?> updateVoter(
             @RequestHeader("Authorization") String authHeader,
             @PathVariable Integer id, @RequestBody Voter updatedVoter) {
         String token = authHeader.replace("Bearer ", "");
         if (!jwtTokenService.validateToken(token) || !isAdmin(token))
             return ResponseEntity.status(403).build();
+
+        // Cek target voter — kalau super admin, hanya super admin sendiri yang boleh edit
+        Voter targetVoter = voterRepository.findById(id).orElse(null);
+        if (targetVoter != null && isSuperAdminEmail(targetVoter.getEmail()) && !isSuperAdmin(token)) {
+            return ResponseEntity.status(403).body("Tidak bisa mengubah akun Super Admin.");
+        }
+
+        // Tidak boleh turunkan status admin super admin
+        if (targetVoter != null && isSuperAdminEmail(targetVoter.getEmail())) {
+            updatedVoter.setIsAdmin(true); // paksa tetap admin
+        }
+
         return ResponseEntity.ok(adminService.updateVoter(id, updatedVoter));
     }
 
     @DeleteMapping("/voters/{id}")
-    public ResponseEntity<String> deleteVoter(
+    public ResponseEntity<?> deleteVoter(
             @RequestHeader("Authorization") String authHeader,
             @PathVariable Integer id) {
         String token = authHeader.replace("Bearer ", "");
         if (!jwtTokenService.validateToken(token) || !isAdmin(token))
             return ResponseEntity.status(403).build();
+
+        // Super admin tidak bisa dihapus oleh siapapun
+        Voter targetVoter = voterRepository.findById(id).orElse(null);
+        if (targetVoter != null && isSuperAdminEmail(targetVoter.getEmail())) {
+            return ResponseEntity.status(403).body("Tidak bisa menghapus akun Super Admin.");
+        }
+
         adminService.deleteVoter(id);
         return ResponseEntity.ok("Deleted");
     }

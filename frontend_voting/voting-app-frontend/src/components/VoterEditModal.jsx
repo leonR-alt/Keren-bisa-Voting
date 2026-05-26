@@ -49,6 +49,7 @@ function VoterEditModal({ voter, onClose, onUpdate }) {
           email: formData.email,
           password: formData.password || undefined,
           isAdmin: formData.isAdmin,
+          hasVoted: formData.hasVoted,
         }),
       });
       if (!response.ok) throw new Error("Gagal mengupdate data pemilih.");
