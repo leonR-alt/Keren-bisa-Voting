@@ -5,7 +5,7 @@ import {
   Vote, LayoutDashboard, Users, Trophy, LogOut,
   Sun, Moon, Menu, X, UserCheck
 } from "lucide-react";
-import "./Navbar.css";
+import "../styles/Navbar.css";
 
 const Navbar = ({ darkMode, toggleDarkMode, isAdmin }) => {
   const { isAuthenticated, logout } = useAuth();
