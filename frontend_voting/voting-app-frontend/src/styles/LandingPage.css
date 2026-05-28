@@ -175,7 +175,7 @@
 .vote-pct { font-size: 0.75rem; font-weight: 700; color: var(--accent); min-width: 36px; text-align: right; }
 .stat-row { display: flex; align-items: center; gap: 10px; }
 .stat-icon { font-size: 1.4rem; }
-.stat-num { font-size: 1.3rem; font-weight: 700; color: var(--accent); letter-spacing: -0.03em; }
+.stat-num { font-size: 1rem; font-weight: 700; color: var(--accent); letter-spacing: -0.03em; }
 .stat-lbl { font-size: 0.7rem; color: var(--text-muted); }
 
 /* ===== SCROLL INDICATOR ===== */
