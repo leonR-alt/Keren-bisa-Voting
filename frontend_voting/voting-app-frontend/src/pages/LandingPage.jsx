@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { Vote, Shield, Zap, Smartphone, Globe, Ban, User, FileText, BarChart2, Lock, ArrowRight, CheckCircle } from "lucide-react";
 import API_BASE_URL from "../config";
 import "../styles/LandingPage.css";
 
@@ -55,7 +56,7 @@ const LandingPage = () => {
 
         <div className="hero-content container">
           <div className="hero-left">
-            <span className="hero-tag animate-fadeUp">🗳️ Platform E-Voting Modern</span>
+            <span className="hero-tag animate-fadeUp">Platform E-Voting Modern</span>
             <h1 className="hero-title animate-fadeUp delay-1">
               Suara Anda,<br />
               <span className="gradient-text">Masa Depan</span><br />
@@ -66,9 +67,9 @@ const LandingPage = () => {
               Dirancang untuk memastikan setiap suara terhitung dengan akurat.
             </p>
             <div className="hero-pills animate-fadeUp delay-3">
-              <span className="pill">🔒 Aman</span>
-              <span className="pill">⚡ Transparan</span>
-              <span className="pill">🚀 Cepat</span>
+              <span className="pill"><Lock size={13} /> Aman</span>
+              <span className="pill"><Zap size={13} /> Transparan</span>
+              <span className="pill"><ArrowRight size={13} /> Cepat</span>
             </div>
             <div className="hero-cta animate-fadeUp delay-4">
               <Link to="/register" className="btn btn-primary btn-lg">
@@ -84,7 +85,7 @@ const LandingPage = () => {
               {/* Main Card — real data or placeholder */}
               <div className="floating-card card-main">
                 <div className="card-header">
-                  <div className="card-avatar">🗳️</div>
+                  <div className="card-avatar"><Vote size={20} strokeWidth={2} /></div>
                   <div>
                     <div className="card-title">
                       {candidates.length > 0 ? (electionTitle || "Pemilihan Aktif") : "Belum Ada Pemilihan"}
@@ -124,7 +125,7 @@ const LandingPage = () => {
               {/* Stats Card */}
               <div className="floating-card card-stats">
                 <div className="stat-row">
-                  <span className="stat-icon">🗳️</span>
+                  <Vote size={22} strokeWidth={1.5} className="stat-icon-svg" />
                   <div>
                     <div className="stat-num">{totalVotes > 0 ? totalVotes : "—"}</div>
                     <div className="stat-lbl">Total Suara</div>
@@ -134,7 +135,7 @@ const LandingPage = () => {
 
               {/* Secure Badge — no animation, fixed position */}
               <div className="floating-card card-secure">
-                <span>🔐</span>
+                <Lock size={14} strokeWidth={2} />
                 <span>Terenkripsi & Aman</span>
               </div>
             </div>
@@ -155,15 +156,15 @@ const LandingPage = () => {
         </div>
         <div className="features-grid">
           {[
-            { icon: "🔐", title: "Keamanan Tinggi", desc: "Enkripsi JWT dan hashing password memastikan data Anda selalu terlindungi dari ancaman." },
-            { icon: "⚡", title: "Real-time Results", desc: "Lihat hasil voting secara langsung dengan visualisasi grafik yang mudah dipahami." },
-            { icon: "📱", title: "Responsif", desc: "Dapat diakses dari perangkat apapun desktop, tablet, maupun smartphone." },
-            { icon: "🌐", title: "Transparan", desc: "Setiap suara tercatat dan dapat diverifikasi oleh admin untuk memastikan integritas." },
-            { icon: "🚫", title: "Anti Double Vote", desc: "Sistem cerdas mencegah pemilih memberikan suara lebih dari satu kali." },
-            { icon: "👤", title: "Role Based", desc: "Kontrol akses berbasis peran memisahkan hak admin dan pemilih dengan jelas." },
+            { icon: <Shield size={28} strokeWidth={1.5} />, title: "Keamanan Tinggi", desc: "Enkripsi JWT dan hashing password memastikan data Anda selalu terlindungi dari ancaman." },
+            { icon: <Zap size={28} strokeWidth={1.5} />, title: "Real-time Results", desc: "Lihat hasil voting secara langsung dengan visualisasi grafik yang mudah dipahami." },
+            { icon: <Smartphone size={28} strokeWidth={1.5} />, title: "Responsif", desc: "Dapat diakses dari perangkat apapun desktop, tablet, maupun smartphone." },
+            { icon: <Globe size={28} strokeWidth={1.5} />, title: "Transparan", desc: "Setiap suara tercatat dan dapat diverifikasi oleh admin untuk memastikan integritas." },
+            { icon: <Ban size={28} strokeWidth={1.5} />, title: "Anti Double Vote", desc: "Sistem cerdas mencegah pemilih memberikan suara lebih dari satu kali." },
+            { icon: <User size={28} strokeWidth={1.5} />, title: "Role Based", desc: "Kontrol akses berbasis peran memisahkan hak admin dan pemilih dengan jelas." },
           ].map((f, i) => (
             <div className={`feature-card card reveal delay-${i % 3 + 1}`} key={i}>
-              <div className="feature-icon">{f.icon}</div>
+              <div className="feature-icon lucide-feature">{f.icon}</div>
               <h3>{f.title}</h3>
               <p>{f.desc}</p>
             </div>
@@ -180,13 +181,13 @@ const LandingPage = () => {
           </div>
           <div className="steps-grid">
             {[
-              { num: "01", icon: "📝", title: "Daftar & Verifikasi", desc: "Buat akun dengan email dan password. Akun Anda akan diverifikasi oleh admin." },
-              { num: "02", icon: "🗳️", title: "Pilih Kandidat", desc: "Lihat profil dan visi misi kandidat, lalu berikan suara Anda dengan yakin." },
-              { num: "03", icon: "📊", title: "Lihat Hasil", desc: "Pantau hasil voting secara real-time dalam bentuk grafik yang informatif." },
+              { num: "01", icon: <FileText size={26} strokeWidth={1.5} />, title: "Daftar & Verifikasi", desc: "Buat akun dengan email dan password. Akun Anda akan diverifikasi oleh admin." },
+              { num: "02", icon: <Vote size={26} strokeWidth={1.5} />, title: "Pilih Kandidat", desc: "Lihat profil dan visi misi kandidat, lalu berikan suara Anda dengan yakin." },
+              { num: "03", icon: <BarChart2 size={26} strokeWidth={1.5} />, title: "Lihat Hasil", desc: "Pantau hasil voting secara real-time dalam bentuk grafik yang informatif." },
             ].map((s, i) => (
               <div className={`step-card reveal delay-${i + 1}`} key={i}>
                 <div className="step-num">{s.num}</div>
-                <div className="step-icon">{s.icon}</div>
+                <div className="step-icon lucide-step">{s.icon}</div>
                 <h3>{s.title}</h3>
                 <p>{s.desc}</p>
               </div>
@@ -217,7 +218,7 @@ const LandingPage = () => {
         <div className="container">
           <div className="footer-content">
             <div className="footer-brand">
-              <span className="footer-logo">🗳️ VoteKu</span>
+              <span className="footer-logo"><Vote size={16} strokeWidth={2.5} style={{display:"inline",verticalAlign:"middle",marginRight:6}} />VoteKu</span>
               <p>Platform e-voting modern yang aman, transparan, dan dapat dipercaya.</p>
             </div>
             <div className="footer-links">

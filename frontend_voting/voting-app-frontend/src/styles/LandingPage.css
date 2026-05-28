@@ -274,3 +274,47 @@
   font-size: 0.85rem;
 }
 .card-empty span { font-size: 1.5rem; }
+/* Lucide icons in features */
+.lucide-feature {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px; height: 56px;
+  background: var(--accent-light);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  margin: 0 auto 16px;
+  color: var(--accent);
+  transition: var(--transition);
+}
+
+.feature-card:hover .lucide-feature {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+/* Lucide icons in steps */
+.lucide-step {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px; height: 52px;
+  background: var(--accent-light);
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  color: var(--accent);
+}
+
+/* Stat icon svg */
+.stat-icon-svg {
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+/* Pill lucide icons */
+.pill svg {
+  vertical-align: middle;
+  margin-right: 2px;
+}

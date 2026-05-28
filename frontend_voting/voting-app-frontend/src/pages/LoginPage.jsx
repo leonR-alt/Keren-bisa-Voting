@@ -81,14 +81,14 @@ const LoginPage = () => {
       <div className="auth-container animate-scaleIn">
         <div className="auth-panel auth-panel-left">
           <div className="auth-brand">
-            <span className="auth-logo">🗳️</span>
+            <div class="auth-logo-icon"><Vote size={22} strokeWidth={2.5} /></div>
             <span className="auth-logo-text">VoteKu</span>
           </div>
           <h2 className="auth-panel-title">Suarakan Pilihan Anda</h2>
           <p className="auth-panel-desc">Platform e-voting yang aman, transparan, dan dapat dipercaya untuk masa depan demokrasi digital.</p>
           <div className="auth-features">
-            {["🔐 Enkripsi JWT", "⚡ Real-time Results", "🚫 Anti Double Vote"].map((f, i) => (
-              <div className="auth-feature" key={i}>{f}</div>
+            {[{ icon: <Lock size={14} />, text: "Enkripsi JWT" }, { icon: <Zap size={14} />, text: "Real-time Results" }, { icon: <ShieldOff size={14} />, text: "Anti Double Vote" }].map((f, i) => (
+              <div className="auth-feature" key={i}>{f.icon} {f.text}</div>
             ))}
           </div>
         </div>

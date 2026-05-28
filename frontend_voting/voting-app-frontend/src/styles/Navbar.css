@@ -190,3 +190,27 @@
   }
   .theme-toggle { display: flex; }
 }
+/* Logo icon wrap */
+.logo-icon-wrap {
+  width: 30px; height: 30px;
+  background: linear-gradient(135deg, var(--accent), #6b95ff);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+/* Nav link icons */
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mobile-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

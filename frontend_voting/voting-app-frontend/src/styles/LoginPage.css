@@ -250,3 +250,18 @@
   .auth-panel-left { display: none; }
   .auth-panel-right { padding: 40px 28px; }
 }
+.auth-logo-icon {
+  width: 40px; height: 40px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.auth-feature {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/AuthContext";
-import "../styles/Navbar.css";
+import {
+  Vote, LayoutDashboard, Users, Trophy, LogOut,
+  Sun, Moon, Menu, X, UserCheck
+} from "lucide-react";
+import "./Navbar.css";
 
 const Navbar = ({ darkMode, toggleDarkMode, isAdmin }) => {
   const { isAuthenticated, logout } = useAuth();
@@ -15,21 +19,20 @@ const Navbar = ({ darkMode, toggleDarkMode, isAdmin }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [location]);
+  useEffect(() => { setMenuOpen(false); }, [location]);
 
-  const handleLogout = () => {
-    logout();
-    window.location.href = "/";
-  };
+  const handleLogout = () => { logout(); window.location.href = "/"; };
+
+  const isActive = (path) => location.pathname === path || location.pathname.startsWith(path + "/");
 
   return (
     <nav className={`navbar ${scrolled ? "scrolled" : ""}`}>
       <div className="navbar-container">
         {/* Logo */}
         <Link to="/" className="navbar-logo">
-          <span className="logo-icon">🗳️</span>
+          <div className="logo-icon-wrap">
+            <Vote size={18} strokeWidth={2.5} />
+          </div>
           <span className="logo-text">VoteKu</span>
         </Link>
 
@@ -37,35 +40,41 @@ const Navbar = ({ darkMode, toggleDarkMode, isAdmin }) => {
         <div className="navbar-links">
           {isAuthenticated && !isAdmin && (
             <>
-              <Link to="/voter" className={`nav-link ${location.pathname === "/voter" ? "active" : ""}`}>Dashboard</Link>
-              <Link to="/vote" className={`nav-link ${location.pathname === "/vote" ? "active" : ""}`}>Vote</Link>
+              <Link to="/voter" className={`nav-link ${isActive("/voter") ? "active" : ""}`}>
+                <LayoutDashboard size={15} /> Dashboard
+              </Link>
+              <Link to="/vote" className={`nav-link ${isActive("/vote") ? "active" : ""}`}>
+                <Vote size={15} /> Vote
+              </Link>
             </>
           )}
           {isAuthenticated && isAdmin && (
             <>
-              <Link to="/admin" className={`nav-link ${location.pathname === "/admin" ? "active" : ""}`}>Dashboard</Link>
-              <Link to="/admin/voters" className={`nav-link ${location.pathname.includes("/admin/voters") ? "active" : ""}`}>Pemilih</Link>
-              <Link to="/admin/candidates" className={`nav-link ${location.pathname.includes("/admin/candidates") ? "active" : ""}`}>Kandidat</Link>
-              <Link to="/admin/results" className={`nav-link ${location.pathname.includes("/admin/results") ? "active" : ""}`}>Hasil</Link>
+              <Link to="/admin" className={`nav-link ${location.pathname === "/admin" ? "active" : ""}`}>
+                <LayoutDashboard size={15} /> Dashboard
+              </Link>
+              <Link to="/admin/voters" className={`nav-link ${isActive("/admin/voters") ? "active" : ""}`}>
+                <Users size={15} /> Pemilih
+              </Link>
+              <Link to="/admin/candidates" className={`nav-link ${isActive("/admin/candidates") ? "active" : ""}`}>
+                <UserCheck size={15} /> Kandidat
+              </Link>
+              <Link to="/admin/results" className={`nav-link ${isActive("/admin/results") ? "active" : ""}`}>
+                <Trophy size={15} /> Hasil
+              </Link>
             </>
           )}
         </div>
 
         {/* Right Side */}
         <div className="navbar-right">
-          {/* Dark Mode Toggle */}
           <button className="theme-toggle" onClick={toggleDarkMode} title="Toggle dark mode">
-            {darkMode ? (
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-            ) : (
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-            )}
+            {darkMode ? <Sun size={16} strokeWidth={2} /> : <Moon size={16} strokeWidth={2} />}
           </button>
 
           {isAuthenticated ? (
             <button className="btn btn-outline nav-btn" onClick={handleLogout}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-              Keluar
+              <LogOut size={15} /> Keluar
             </button>
           ) : (
             <div className="nav-auth">
@@ -74,9 +83,8 @@ const Navbar = ({ darkMode, toggleDarkMode, isAdmin }) => {
             </div>
           )}
 
-          {/* Hamburger */}
           <button className={`hamburger ${menuOpen ? "open" : ""}`} onClick={() => setMenuOpen(!menuOpen)}>
-            <span /><span /><span />
+            {menuOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
         </div>
       </div>
@@ -85,16 +93,16 @@ const Navbar = ({ darkMode, toggleDarkMode, isAdmin }) => {
       <div className={`mobile-menu ${menuOpen ? "open" : ""}`}>
         {isAuthenticated && !isAdmin && (
           <>
-            <Link to="/voter" className="mobile-link">Dashboard</Link>
-            <Link to="/vote" className="mobile-link">Vote</Link>
+            <Link to="/voter" className="mobile-link"><LayoutDashboard size={16} /> Dashboard</Link>
+            <Link to="/vote" className="mobile-link"><Vote size={16} /> Vote</Link>
           </>
         )}
         {isAuthenticated && isAdmin && (
           <>
-            <Link to="/admin" className="mobile-link">Dashboard</Link>
-            <Link to="/admin/voters" className="mobile-link">Pemilih</Link>
-            <Link to="/admin/candidates" className="mobile-link">Kandidat</Link>
-            <Link to="/admin/results" className="mobile-link">Hasil</Link>
+            <Link to="/admin" className="mobile-link"><LayoutDashboard size={16} /> Dashboard</Link>
+            <Link to="/admin/voters" className="mobile-link"><Users size={16} /> Pemilih</Link>
+            <Link to="/admin/candidates" className="mobile-link"><UserCheck size={16} /> Kandidat</Link>
+            <Link to="/admin/results" className="mobile-link"><Trophy size={16} /> Hasil</Link>
           </>
         )}
         {!isAuthenticated && (
@@ -104,7 +112,9 @@ const Navbar = ({ darkMode, toggleDarkMode, isAdmin }) => {
           </>
         )}
         {isAuthenticated && (
-          <button className="mobile-link mobile-logout" onClick={handleLogout}>Keluar</button>
+          <button className="mobile-link mobile-logout" onClick={handleLogout}>
+            <LogOut size={16} /> Keluar
+          </button>
         )}
       </div>
     </nav>

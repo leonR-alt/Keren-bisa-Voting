@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Users, UserCheck, Trophy, ClipboardList } from "lucide-react";
 import API_BASE_URL from "../../config";
 import "../../styles/AdminDashboard.css";
 
@@ -28,9 +29,9 @@ const AdminDashboard = () => {
   };
 
   const menuItems = [
-    { to: "/admin/voters", icon: "👥", label: "Pemilih", desc: "Kelola data pemilih" },
-    { to: "/admin/candidates", icon: "🏛️", label: "Kandidat", desc: "Kelola & buat pemilihan" },
-    { to: "/admin/results", icon: "📊", label: "Hasil", desc: "Lihat hasil voting" },
+    { to: "/admin/voters", icon: <Users size={28} strokeWidth={1.5} />, label: "Pemilih", desc: "Kelola data pemilih" },
+    { to: "/admin/candidates", icon: <UserCheck size={28} strokeWidth={1.5} />, label: "Kandidat", desc: "Kelola & buat pemilihan" },
+    { to: "/admin/results", icon: <Trophy size={28} strokeWidth={1.5} />, label: "Hasil", desc: "Lihat hasil voting" },
   ];
 
   return (
@@ -38,7 +39,7 @@ const AdminDashboard = () => {
       <h1 className="dashboard-title">Admin Dashboard</h1>
       <p className="dashboard-subtitle">
         {electionInfo.title
-          ? `📋 ${electionInfo.title}`
+          ? electionInfo.title
           : "Selamat datang di panel administrasi VoteKu"}
       </p>
       {electionInfo.deadline && (
@@ -50,7 +51,7 @@ const AdminDashboard = () => {
       <div className="dashboard-card">
         {menuItems.map((item, i) => (
           <Link to={item.to} key={i} className="stat-item" style={{ textDecoration: "none" }}>
-            <span style={{ fontSize: "2rem", display: "block", marginBottom: 8 }}>{item.icon}</span>
+            <span style={{ display: "flex", justifyContent: "center", marginBottom: 10, color: "var(--accent)" }}>{item.icon}</span>
             <span className="stat-number" style={{ fontSize: "1.1rem" }}>{item.label}</span>
             <span className="stat-label">{item.desc}</span>
           </Link>

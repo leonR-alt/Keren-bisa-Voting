@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import API_BASE_URL from "../config";
 import "../styles/LoginPage.css";
+import { Vote, CheckCircle, Lock, BarChart2 } from "lucide-react";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({ name: "", email: "", password: "", confirmPassword: "" });
@@ -62,14 +63,14 @@ const RegisterPage = () => {
         {/* Left Panel */}
         <div className="auth-panel auth-panel-left">
           <div className="auth-brand">
-            <span className="auth-logo">🗳️</span>
+            <div class="auth-logo-icon"><Vote size={22} strokeWidth={2.5} /></div>
             <span className="auth-logo-text">VoteKu</span>
           </div>
           <h2 className="auth-panel-title">Bergabung & Berikan Suara Anda</h2>
           <p className="auth-panel-desc">Daftar sekarang dan jadilah bagian dari demokrasi digital yang aman dan transparan.</p>
           <div className="auth-features">
-            {["✅ Gratis & Mudah", "🔐 Data Terlindungi", "📊 Hasil Real-time"].map((f, i) => (
-              <div className="auth-feature" key={i}>{f}</div>
+            {[{ icon: <CheckCircle size={14} />, text: "Gratis & Mudah" }, { icon: <Lock size={14} />, text: "Data Terlindungi" }, { icon: <BarChart2 size={14} />, text: "Hasil Real-time" }].map((f, i) => (
+              <div className="auth-feature" key={i}>{f.icon} {f.text}</div>
             ))}
           </div>
         </div>
