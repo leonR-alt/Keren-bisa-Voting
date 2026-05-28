@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { Vote, Lock, Zap, ShieldOff } from "lucide-react";
 import API_BASE_URL from "../config";
 import { useToast, ToastContainer } from "../components/Toast";
 import "../styles/LoginPage.css";
