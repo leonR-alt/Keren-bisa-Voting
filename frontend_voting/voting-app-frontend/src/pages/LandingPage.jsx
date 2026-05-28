@@ -234,7 +234,7 @@ const LandingPage = () => {
             </div>
           </div>
           <div className="footer-bottom">
-            <p>© 2026 VoteKu. Dibuat dengan ♡ untuk Tugas Bu Meta.</p>
+            <p>© 2026 VoteKu. Dibuat dengan ♡ untuk Tugas Perkuliahan.</p>
           </div>
         </div>
       </footer>
