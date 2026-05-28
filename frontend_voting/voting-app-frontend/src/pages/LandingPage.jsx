@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { Vote, Shield, Zap, Smartphone, Globe, Ban, User, FileText, BarChart2, Lock, ArrowRight, CheckCircle } from "lucide-react";
+import { Vote, Shield, Zap, Smartphone, Globe, Ban, User, FileText, BarChart2, Lock, ArrowRight, CheckCircle, Inbox } from "lucide-react";
 import API_BASE_URL from "../config";
 import "../styles/LandingPage.css";
 
@@ -115,10 +115,12 @@ const LandingPage = () => {
                     })}
                   </div>
                 ) : (
-                  <div className="card-empty">
-                    <span>📭</span>
-                    <p>Belum ada kandidat</p>
+                 <div className="card-empty">
+                  <div className="empty-icon">
+                    <Inbox size={26} strokeWidth={2.2} />
                   </div>
+                  <p>Belum ada kandidat</p>
+                </div>
                 )}
               </div>
 
@@ -127,7 +129,7 @@ const LandingPage = () => {
                 <div className="stat-row">
                   <Vote size={22} strokeWidth={1.5} className="stat-icon-svg" />
                   <div>
-                    <div className="stat-num">{totalVotes > 0 ? totalVotes : "—"}</div>
+                    <div className="stat-num">{totalVotes > 0 ? totalVotes : "Belum ada suara "}</div>
                     <div className="stat-lbl">Total Suara</div>
                   </div>
                 </div>
@@ -232,7 +234,7 @@ const LandingPage = () => {
             </div>
           </div>
           <div className="footer-bottom">
-            <p>© 2026 VoteKu. Dibuat dengan ❤️ untuk demokrasi digital.</p>
+            <p>© 2026 VoteKu. Dibuat dengan ♡ untuk Tugas Bu Meta.</p>
           </div>
         </div>
       </footer>
