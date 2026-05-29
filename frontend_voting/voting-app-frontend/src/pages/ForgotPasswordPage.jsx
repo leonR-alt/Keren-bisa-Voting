@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { KeyRound, Mail } from "lucide-react";
 import "../styles/LoginPage.css";
 
 const ForgotPasswordPage = () => {
@@ -12,7 +13,7 @@ const ForgotPasswordPage = () => {
 
       <div className="auth-container animate-scaleIn" style={{ gridTemplateColumns: "1fr" }}>
         <div className="auth-panel auth-panel-right" style={{ textAlign: "center", maxWidth: 480, margin: "0 auto" }}>
-          <div style={{ fontSize: "3rem", marginBottom: 16 }}>🔐</div>
+          <div style={{ display:"flex", justifyContent:"center", marginBottom:16 }}><KeyRound size={48} strokeWidth={1.5} style={{color:"var(--accent)"}} /></div>
           <div className="auth-form-header">
             <h1>Lupa Password?</h1>
             <p>Jangan khawatir, kami siap membantu</p>
@@ -50,7 +51,7 @@ const ForgotPasswordPage = () => {
               Kontak Admin
             </div>
             <div style={{ fontSize: "0.9rem", color: "var(--text-primary)", fontWeight: 600 }}>
-              📧 Hubungi admin melalui email atau langsung
+              <Mail size={15} style={{display:"inline",verticalAlign:"middle",marginRight:6}} />Hubungi admin melalui email atau langsung
             </div>
           </div>
 

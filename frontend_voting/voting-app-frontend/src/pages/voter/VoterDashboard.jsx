@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/AuthContext";
 import API_BASE_URL from "../../config";
+import { Clock, Users, Vote, CheckCircle2, AlertCircle, BarChart2, Trophy, Ban } from "lucide-react";
 import "../../styles/VoterDashboard.css";
 
 const VoterDashboard = () => {
@@ -84,7 +85,7 @@ const VoterDashboard = () => {
     </div>
   );
 
-  if (error) return <div className="vd-error"><span>⚠️</span><p>{error}</p></div>;
+  if (error) return <div className="vd-error"><AlertCircle size={28} strokeWidth={1.5} style={{color:"var(--warning)"}} /><p>{error}</p></div>;
 
   const hasVoted = voterDetails?.hasVoted;
   const totalVotes = candidates.reduce((sum, c) => sum + (c.voteCount || 0), 0);
@@ -103,7 +104,7 @@ const VoterDashboard = () => {
             </div>
           </div>
           <span className={`badge ${hasVoted ? "badge-success" : "badge-primary"}`}>
-            {hasVoted ? "✅ Sudah Voting" : "⏳ Belum Voting"}
+            {hasVoted ? <><CheckCircle2 size={12} /> Sudah Voting</> : <><Clock size={12} /> Belum Voting</>}
           </span>
         </div>
 
@@ -112,7 +113,7 @@ const VoterDashboard = () => {
 
           {/* Countdown */}
           <div className="vd-stat-card card">
-            <div className="vd-stat-icon">⏱️</div>
+            <div className="vd-stat-icon"><Clock size={24} strokeWidth={1.5} /></div>
             <p className="vd-stat-label">Sisa Waktu Voting</p>
             {noDeadline ? (
               <p className="vd-stat-sub" style={{ color: "var(--text-muted)", fontSize: "0.85rem", marginTop: 8 }}>
@@ -143,7 +144,7 @@ const VoterDashboard = () => {
 
           {/* Kandidat */}
           <div className="vd-stat-card card">
-            <div className="vd-stat-icon">👥</div>
+            <div className="vd-stat-icon"><Users size={24} strokeWidth={1.5} /></div>
             <p className="vd-stat-label">Jumlah Kandidat</p>
             <p className="vd-stat-num">{candidates.length}</p>
             <p className="vd-stat-sub">kandidat tersedia</p>
@@ -151,7 +152,7 @@ const VoterDashboard = () => {
 
           {/* Status */}
           <div className={`vd-stat-card card ${hasVoted ? "vd-voted" : "vd-not-voted"}`}>
-            <div className="vd-stat-icon">{hasVoted ? "✅" : "🗳️"}</div>
+            <div className="vd-stat-icon">{hasVoted ? <CheckCircle2 size={24} strokeWidth={1.5} /> : <Vote size={24} strokeWidth={1.5} />}</div>
             <p className="vd-stat-label">Status Anda</p>
             <p className="vd-status-text">
               {hasVoted ? "Suara Anda Sudah Terhitung!" : "Anda Belum Memberikan Suara"}
@@ -174,7 +175,7 @@ const VoterDashboard = () => {
         {candidates.length > 0 && (
           <div className="vd-results animate-fadeUp delay-2">
             <div className="vd-section-header">
-              <h2>📊 Hasil Voting Sementara</h2>
+              <h2><BarChart2 size={18} style={{display:"inline",verticalAlign:"middle",marginRight:6}} />Hasil Voting Sementara</h2>
               <span className="badge badge-primary">Live</span>
             </div>
             <div className="vd-results-list">
@@ -198,14 +199,14 @@ const VoterDashboard = () => {
                           <div className="vd-result-fill" style={{ width: `${pct}%` }} />
                         </div>
                       </div>
-                      {i === 0 && totalVotes > 0 && <div className="vd-result-winner">👑</div>}
+                      {i === 0 && totalVotes > 0 && <div className="vd-result-winner"><Trophy size={18} color="#f59e0b" /></div>}
                     </div>
                   );
                 })}
             </div>
             {totalVotes === 0 && (
               <div className="vd-no-votes card">
-                <span>🗳️</span>
+                <Vote size={32} strokeWidth={1.5} style={{color:"var(--text-muted)",marginBottom:8}} />
                 <p>Belum ada suara masuk. Jadilah yang pertama!</p>
               </div>
             )}

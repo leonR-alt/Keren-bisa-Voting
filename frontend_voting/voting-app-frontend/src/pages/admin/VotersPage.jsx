@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import VoterEditModal from "../../components/VoterEditModal";
 import API_BASE_URL from "../../config";
+import { ShieldCheck, User, CheckCircle2, Clock, Users, X, Plus } from "lucide-react";
 import "../../styles/AdminPages.css";
 
 const VotersPage = () => {
@@ -85,7 +86,7 @@ const VotersPage = () => {
             <p className="admin-desc">Total {voters.length} pemilih terdaftar</p>
           </div>
           <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
-            {showForm ? "✕ Tutup" : "+ Tambah Pemilih"}
+            {showForm ? <><X size={14} /> Tutup</> : <><Plus size={14} /> Tambah Pemilih</>}
           </button>
         </div>
 
@@ -164,12 +165,12 @@ const VotersPage = () => {
                   <td className="td-email">{voter.email}</td>
                   <td>
                     <span className={`badge ${voter.isAdmin ? "badge-primary" : "badge-success"}`}>
-                      {voter.isAdmin ? "👑 Admin" : "👤 Voter"}
+                      {voter.isAdmin ? <><ShieldCheck size={11} /> Admin</> : <><User size={11} /> Voter</>}
                     </span>
                   </td>
                   <td>
                     <span className={`badge ${voter.hasVoted ? "badge-success" : "badge-danger"}`}>
-                      {voter.hasVoted ? "✅ Sudah Vote" : "⏳ Belum Vote"}
+                      {voter.hasVoted ? <><CheckCircle2 size={11} /> Sudah Vote</> : <><Clock size={11} /> Belum Vote</>}
                     </span>
                   </td>
                   <td>
@@ -188,7 +189,7 @@ const VotersPage = () => {
           </table>
           {filteredVoters.length === 0 && (
             <div className="admin-empty">
-              <span>👥</span>
+              <Users size={32} strokeWidth={1.5} style={{color:"var(--text-muted)",marginBottom:8}} />
               <p>Tidak ada pemilih ditemukan.</p>
             </div>
           )}

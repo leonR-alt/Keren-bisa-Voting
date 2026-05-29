@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import API_BASE_URL from "../../config";
+import { Trash2, AlertTriangle, Vote, ClipboardList, Users, Save, Building2, Lightbulb, Target } from "lucide-react";
 import { useToast, ToastContainer } from "../../components/Toast";
 import "../../styles/AdminPages.css";
 
@@ -8,13 +9,13 @@ const STEPS = { INFO: "info", CANDIDATES: "candidates" };
 const ConfirmModal = ({ candidate, onConfirm, onCancel }) => (
   <div className="wizard-overlay animate-fadeIn" onClick={onCancel}>
     <div className="wizard-card card animate-scaleIn" style={{ maxWidth: 400, textAlign: "center" }} onClick={e => e.stopPropagation()}>
-      <div style={{ fontSize: "2.5rem", marginBottom: 12 }}>🗑️</div>
+      <Trash2 size={40} strokeWidth={1.5} style={{color:"var(--danger)",marginBottom:12}} />
       <h2 style={{ fontFamily: "var(--font-display)", fontSize: "1.2rem", fontWeight: 800, marginBottom: 8 }}>Hapus Kandidat?</h2>
       <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", marginBottom: 8 }}>
         Anda akan menghapus <strong>{candidate?.name}</strong>.
       </p>
       <p style={{ fontSize: "0.8rem", color: "var(--danger)", background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: "var(--radius-md)", padding: "8px 12px", marginBottom: 24 }}>
-        ⚠️ Tindakan ini tidak dapat dibatalkan!
+        <AlertTriangle size={13} style={{display:"inline",verticalAlign:"middle",marginRight:4}} />Tindakan ini tidak dapat dibatalkan!
       </p>
       <div style={{ display: "flex", gap: 10 }}>
         <button className="btn btn-outline" style={{ flex: 1, justifyContent: "center" }} onClick={onCancel}>Batal</button>
@@ -120,7 +121,7 @@ const CandidatesPage = () => {
       await fetchCandidates();
       await fetchElectionInfo();
       setStep(null);
-      addToast(`✅ Pemilihan "${electionInfo.title}" berhasil dibuat!`, "success");
+      addToast(`Pemilihan "${electionInfo.title}" berhasil dibuat!`, "success");
     } catch (err) {
       addToast("Gagal menyimpan: " + err.message, "error");
     }
@@ -140,7 +141,7 @@ const CandidatesPage = () => {
       });
       if (!res.ok) throw new Error("Gagal menghapus.");
       setCandidates(prev => prev.filter(c => c.id !== deleteTarget.id));
-      addToast(`🗑️ ${deleteTarget.name} berhasil dihapus.`, "success");
+      addToast(`${deleteTarget.name} berhasil dihapus.`, "success");
     } catch (err) {
       addToast(err.message, "error");
     } finally {
@@ -161,7 +162,7 @@ const CandidatesPage = () => {
       const updated = await res.json();
       setCandidates(prev => prev.map(c => c.id === updated.id ? updated : c));
       setEditingCandidate(null);
-      addToast("✅ Kandidat berhasil diupdate!", "success");
+      addToast("Kandidat berhasil diupdate!", "success");
     } catch (err) {
       addToast(err.message, "error");
     }
@@ -183,9 +184,9 @@ const CandidatesPage = () => {
           <div>
             <span className="section-tag">Admin Panel</span>
             <h1 className="admin-title">Manajemen <span style={{ color: "var(--accent)" }}>Kandidat</span></h1>
-            {currentInfo.title && <p className="admin-desc">📋 {currentInfo.title} · Deadline: {formatDeadline(currentInfo.deadline)}</p>}
+            {currentInfo.title && <p className="admin-desc"><ClipboardList size={13} style={{display:"inline",verticalAlign:"middle",marginRight:4}} />{currentInfo.title} · Deadline: {formatDeadline(currentInfo.deadline)}</p>}
           </div>
-          <button className="btn btn-primary" onClick={startWizard}>🗳️ Buat Pemilihan Baru</button>
+          <button className="btn btn-primary" onClick={startWizard}><Vote size={15} /> Buat Pemilihan Baru</button>
         </div>
 
         {error && <div className="admin-error">{error}</div>}
@@ -197,7 +198,7 @@ const CandidatesPage = () => {
               {wizardStep === STEPS.INFO && (
                 <>
                   <div className="wizard-header">
-                    <h2>📋 Info Pemilihan</h2>
+                    <h2><ClipboardList size={20} style={{display:"inline",verticalAlign:"middle",marginRight:8}} />Info Pemilihan</h2>
                     <p>Isi judul, berapa kandidat, dan waktu berakhir voting</p>
                   </div>
                   <form onSubmit={handleInfoNext} className="wizard-form">
@@ -237,7 +238,7 @@ const CandidatesPage = () => {
               {wizardStep === STEPS.CANDIDATES && (
                 <>
                   <div className="wizard-header">
-                    <h2>👥 Isi Data Kandidat</h2>
+                    <h2><Users size={20} style={{display:"inline",verticalAlign:"middle",marginRight:8}} />Isi Data Kandidat</h2>
                     <p>{electionInfo.title} · {candidateCount} kandidat</p>
                   </div>
                   <form onSubmit={handleCandidatesSubmit} className="wizard-form">
@@ -276,7 +277,7 @@ const CandidatesPage = () => {
                     </div>
                     <div className="wizard-actions">
                       <button type="button" className="btn btn-outline" onClick={() => setWizardStep(STEPS.INFO)}>← Kembali</button>
-                      <button type="submit" className="btn btn-primary">💾 Simpan Pemilihan</button>
+                      <button type="submit" className="btn btn-primary"><Save size={15} /> Simpan Pemilihan</button>
                     </div>
                   </form>
                 </>
@@ -294,7 +295,7 @@ const CandidatesPage = () => {
           <div className="admin-empty-state">
             <span>🏛️</span>
             <p>Belum ada pemilihan. Buat pemilihan pertama!</p>
-            <button className="btn btn-primary" onClick={startWizard}>🗳️ Buat Pemilihan Baru</button>
+            <button className="btn btn-primary" onClick={startWizard}><Vote size={15} /> Buat Pemilihan Baru</button>
           </div>
         )}
 
@@ -333,11 +334,11 @@ const CandidatesPage = () => {
                   <div className="candidate-admin-num">#{i + 1}</div>
                   <div className="candidate-admin-avatar">{candidate.name?.[0]}</div>
                   <h3 className="candidate-admin-name">{candidate.name}</h3>
-                  <div className="candidate-admin-party"><span>🏛️</span> {candidate.party}</div>
-                  {candidate.visi && <div className="candidate-admin-visi"><span>💡 Visi:</span> {candidate.visi}</div>}
-                  {candidate.misi && <div className="candidate-admin-visi"><span>🎯 Misi:</span> {candidate.misi}</div>}
+                  <div className="candidate-admin-party"><Building2 size={13} style={{display:"inline",verticalAlign:"middle",marginRight:4}} />{candidate.party}</div>
+                  {candidate.visi && <div className="candidate-admin-visi"><Lightbulb size={12} style={{display:"inline",verticalAlign:"middle",marginRight:4,color:"var(--accent)"}} /><span>Visi:</span> {candidate.visi}</div>}
+                  {candidate.misi && <div className="candidate-admin-visi"><Target size={12} style={{display:"inline",verticalAlign:"middle",marginRight:4,color:"var(--accent)"}} /><span>Misi:</span> {candidate.misi}</div>}
                   <div className="candidate-admin-votes">
-                    <span className="badge badge-primary">🗳️ {candidate.voteCount || 0} suara</span>
+                    <span className="badge badge-primary"><Vote size={11} style={{display:"inline",verticalAlign:"middle",marginRight:3}} />{candidate.voteCount || 0} suara</span>
                   </div>
                   <div className="candidate-admin-actions">
                     <button className="btn btn-outline candidate-btn" onClick={() => setEditingCandidate({ ...candidate })}>

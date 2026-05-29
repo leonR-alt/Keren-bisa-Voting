@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import API_BASE_URL from "../../config";
+import { BarChart2, Trophy, BarChart } from "lucide-react";
 import "../../styles/ResultsPage.css";
 
 const ResultsPage = () => {
@@ -43,7 +44,7 @@ const ResultsPage = () => {
       <div className="container">
         {/* Header */}
         <div className="results-header animate-fadeUp">
-          <span className="section-tag">📊 Live Results</span>
+          <span className="section-tag"><BarChart2 size={12} style={{display:"inline",verticalAlign:"middle",marginRight:4}} />Live Results</span>
           <h1 className="results-title">Hasil <span style={{ color: "var(--accent)" }}>Voting</span></h1>
           <p className="results-desc">Total {totalVotes} suara telah masuk</p>
         </div>
@@ -58,7 +59,7 @@ const ResultsPage = () => {
         {/* Winner Card */}
         {winner && totalVotes > 0 && (
           <div className="results-winner card animate-fadeUp delay-1">
-            <div className="winner-crown">👑</div>
+            <div className="winner-crown"><Trophy size={32} strokeWidth={1.5} style={{color:"#f59e0b"}} /></div>
             <div className="winner-avatar">{winner.name?.[0]}</div>
             <div className="winner-info">
               <span className="winner-label">Unggul Sementara</span>
@@ -81,7 +82,7 @@ const ResultsPage = () => {
         {/* Results List */}
         {results.length === 0 && !error && (
           <div className="results-empty">
-            <span>📊</span>
+            <BarChart size={32} strokeWidth={1.5} style={{color:"var(--text-muted)",marginBottom:8}} />
             <p>Belum ada suara yang masuk.</p>
           </div>
         )}
@@ -113,7 +114,7 @@ const ResultsPage = () => {
                       />
                     </div>
                   </div>
-                  {i === 0 && totalVotes > 0 && <div className="result-winner-badge">👑 Unggul</div>}
+                  {i === 0 && totalVotes > 0 && <div className="result-winner-badge"><Trophy size={11} style={{display:"inline",verticalAlign:"middle",marginRight:3}} />Unggul</div>}
                 </div>
               );
             })}
