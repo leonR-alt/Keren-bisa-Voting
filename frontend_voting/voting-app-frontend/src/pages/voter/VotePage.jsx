@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API_BASE_URL from "../../config";
-import { Vote, CheckCircle2, Lock, Building2, AlertTriangle, PartyPopper } from "lucide-react";
 import { useToast, ToastContainer } from "../../components/Toast";
 import "../../styles/VotePage.css";
 
@@ -88,12 +87,12 @@ const VotePage = () => {
     <div className="vote-success-page">
       <ToastContainer toasts={toasts} removeToast={removeToast} />
       <div className="vote-success-card card animate-scaleIn">
-        <div className="vote-success-icon"><PartyPopper size={52} strokeWidth={1.5} style={{color:"var(--success)"}} /></div>
+        <div className="vote-success-icon">🎉</div>
         <h1>Suara Berhasil!</h1>
         <p>Terima kasih! Suara Anda untuk <strong>{selectedCandidate?.name}</strong> telah berhasil dicatat.</p>
         <div className="vote-success-info">
-          <span><CheckCircle2 size={14} style={{display:"inline",verticalAlign:"middle",marginRight:4}} />Suara Anda telah terhitung</span>
-          <span><Lock size={14} style={{display:"inline",verticalAlign:"middle",marginRight:4}} />Tersimpan dengan aman</span>
+          <span>✅ Suara Anda telah terhitung</span>
+          <span>🔐 Tersimpan dengan aman</span>
         </div>
         <button className="btn btn-primary" onClick={() => navigate("/voter")}>
           Kembali ke Dashboard
@@ -115,14 +114,14 @@ const VotePage = () => {
       <ToastContainer toasts={toasts} removeToast={removeToast} />
       <div className="container">
         <div className="vote-header animate-fadeUp">
-          {electionTitle ? <span className="section-tag"><Vote size={12} style={{display:"inline",verticalAlign:"middle",marginRight:4}} />{electionTitle}</span> : <span className="section-tag">Pemilihan Aktif</span>}
+          {electionTitle ? <span className="section-tag">🗳️ {electionTitle}</span> : <span className="section-tag">Pemilihan Aktif</span>}
           <h1 className="vote-title">Pilih <span style={{ color: "var(--accent)" }}>Kandidat</span> Anda</h1>
           <p className="vote-desc">Pilih dengan bijak. Suara Anda hanya bisa diberikan satu kali dan tidak dapat diubah.</p>
         </div>
 
         {candidates.length === 0 && (
           <div className="vote-empty">
-            <Vote size={32} strokeWidth={1.5} style={{color:"var(--text-muted)",marginBottom:8}} />
+            <span>🗳️</span>
             <p>Belum ada kandidat yang terdaftar.</p>
           </div>
         )}
@@ -134,7 +133,7 @@ const VotePage = () => {
               <div className="vote-candidate-avatar">{candidate.name?.[0] || "?"}</div>
               <h2 className="vote-candidate-name">{candidate.name}</h2>
               <div className="vote-candidate-party">
-                <Building2 size={13} style={{display:"inline",verticalAlign:"middle",marginRight:4}} />{candidate.party}
+                <span>🏛️</span> {candidate.party}
               </div>
               {candidate.visi && (
                 <div className="vote-candidate-visi">
@@ -160,7 +159,7 @@ const VotePage = () => {
       {showModal && selectedCandidate && (
         <div className="vote-modal-overlay animate-fadeIn" onClick={() => !voting && setShowModal(false)}>
           <div className="vote-modal card animate-scaleIn" onClick={(e) => e.stopPropagation()}>
-            <div className="vote-modal-icon"><Vote size={40} strokeWidth={1.5} style={{color:"var(--accent)"}} /></div>
+            <div className="vote-modal-icon">🗳️</div>
             <h2>Konfirmasi Vote</h2>
             <p>Anda akan memberikan suara kepada:</p>
             <div className="vote-modal-candidate">
@@ -170,7 +169,7 @@ const VotePage = () => {
                 <span>{selectedCandidate.party}</span>
               </div>
             </div>
-            <p className="vote-modal-warning"><AlertTriangle size={13} style={{display:"inline",verticalAlign:"middle",marginRight:4}} />Suara tidak dapat diubah setelah dikonfirmasi!</p>
+            <p className="vote-modal-warning">⚠️ Suara tidak dapat diubah setelah dikonfirmasi!</p>
             <div className="vote-modal-actions">
               <button className="btn btn-outline" onClick={() => setShowModal(false)} disabled={voting}>Batal</button>
               <button className="btn btn-primary" onClick={handleConfirmVote} disabled={voting}>

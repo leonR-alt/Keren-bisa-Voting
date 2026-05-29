@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/AuthContext";
 import {
-  Vote, LayoutDashboard, Users, Trophy, LogOut,
-  Sun, Moon, Menu, X, UserCheck
+  LayoutDashboard, Users, Trophy, LogOut,
+  Sun, Moon, Menu, X, UserCheck, Vote
 } from "lucide-react";
 import "../styles/Navbar.css";
 
@@ -31,7 +31,11 @@ const Navbar = ({ darkMode, toggleDarkMode, isAdmin }) => {
         {/* Logo */}
         <Link to="/" className="navbar-logo">
           <div className="logo-icon-wrap">
-            <Vote size={18} strokeWidth={2.5} />
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="3" width="18" height="18" rx="4" fill="white" fillOpacity="0.15"/>
+              <path d="M7 12l3.5 3.5L17 8" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M12 3v2M12 19v2M3 12h2M19 12h2" stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity="0.5"/>
+            </svg>
           </div>
           <span className="logo-text">VoteKu</span>
         </Link>
