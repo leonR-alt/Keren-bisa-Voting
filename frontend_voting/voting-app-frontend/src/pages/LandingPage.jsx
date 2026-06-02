@@ -127,7 +127,9 @@ const LandingPage = () => {
               {/* Stats Card */}
               <div className="floating-card card-stats">
                 <div className="stat-row">
-                  <Vote size={20} strokeWidth={2} className="stat-icon-svg" />
+                  <div className="stat-icon-svg">
+                <Vote size={20} strokeWidth={2} />
+              </div>
                   <div>
                     <div className="stat-num">{totalVotes > 0 ? totalVotes : "Belum ada suara "}</div>
                     <div className="stat-lbl">Total Suara</div>

@@ -5,6 +5,7 @@ import {
   LayoutDashboard, Users, Trophy, LogOut,
   Sun, Moon, Menu, X, UserCheck, Vote
 } from "lucide-react";
+import logo from "../assets/logo.png";
 import "../styles/Navbar.css";
 
 const Navbar = ({ darkMode, toggleDarkMode, isAdmin }) => {
@@ -28,18 +29,13 @@ const Navbar = ({ darkMode, toggleDarkMode, isAdmin }) => {
   return (
     <nav className={`navbar ${scrolled ? "scrolled" : ""}`}>
       <div className="navbar-container">
-        {/* Logo */}
-        <Link to="/" className="navbar-logo">
-          <div className="logo-icon-wrap">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="3" y="3" width="18" height="18" rx="4" fill="white" fillOpacity="0.15"/>
-              <path d="M7 12l3.5 3.5L17 8" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M12 3v2M12 19v2M3 12h2M19 12h2" stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity="0.5"/>
-            </svg>
-          </div>
-          <span className="logo-text">VoteKu</span>
-        </Link>
-
+       {/* Logo */}
+<Link to="/" className="navbar-logo">
+  <div className="logo-icon-wrap">
+    <img src={logo} alt="VoteKu Logo" className="logo-img" />
+  </div>
+  <span className="logo-text">VoteKu</span>
+</Link>
         {/* Desktop Nav */}
         <div className="navbar-links">
           {isAuthenticated && !isAdmin && (
