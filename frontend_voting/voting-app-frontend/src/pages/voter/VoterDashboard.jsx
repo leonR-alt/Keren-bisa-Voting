@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
+import { Waves, Ban } from "lucide-react";  
 import { useAuth } from "../../hooks/AuthContext";
 import API_BASE_URL from "../../config";
 import "../../styles/VoterDashboard.css";
