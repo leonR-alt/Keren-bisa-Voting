@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { Waves, Ban } from "lucide-react";  
+import { Clock, Users, CheckCircle, AlertTriangle, BarChart3, Crown, Vote } from "lucide-react";
 import { useAuth } from "../../hooks/AuthContext";
 import API_BASE_URL from "../../config";
 import "../../styles/VoterDashboard.css";
@@ -85,7 +85,12 @@ const VoterDashboard = () => {
     </div>
   );
 
-  if (error) return <div className="vd-error"><span>⚠️</span><p>{error}</p></div>;
+  if (error) return (
+    <div className="vd-error">
+      <AlertTriangle size={24} style={{color: "var(--danger)"}} />
+      <p>{error}</p>
+    </div>
+  );
 
   const hasVoted = voterDetails?.hasVoted;
   const totalVotes = candidates.reduce((sum, c) => sum + (c.voteCount || 0), 0);
@@ -97,14 +102,24 @@ const VoterDashboard = () => {
         {/* Header */}
         <div className="vd-header animate-fadeUp">
           <div className="vd-greeting">
-            <Waves size={28} strokeWidth={1.5} style={{color:"var(--accent)",flexShrink:0}} />
+            <Vote size={28} strokeWidth={1.5} style={{color:"var(--accent)",flexShrink:0}} />
             <div>
               <h1>Halo, <span className="vd-name">{voterDetails?.name || "Pemilih"}</span></h1>
               <p>{voterDetails?.email}</p>
             </div>
           </div>
           <span className={`badge ${hasVoted ? "badge-success" : "badge-primary"}`}>
-            {hasVoted ? "✅ Sudah Voting" : "⏳ Belum Voting"}
+            {hasVoted ? (
+              <>
+                <CheckCircle size={14} style={{display: "inline", marginRight: 4}} />
+                Sudah Voting
+              </>
+            ) : (
+              <>
+                <Clock size={14} style={{display: "inline", marginRight: 4}} />
+                Belum Voting
+              </>
+            )}
           </span>
         </div>
 
@@ -113,7 +128,9 @@ const VoterDashboard = () => {
 
           {/* Countdown */}
           <div className="vd-stat-card card">
-            <div className="vd-stat-icon">⏱️</div>
+            <div className="vd-stat-icon">
+              <Clock size={24} strokeWidth={1.5} color="var(--accent)" />
+            </div>
             <p className="vd-stat-label">Sisa Waktu Voting</p>
             {noDeadline ? (
               <p className="vd-stat-sub" style={{ color: "var(--text-muted)", fontSize: "0.85rem", marginTop: 8 }}>
@@ -121,7 +138,7 @@ const VoterDashboard = () => {
               </p>
             ) : deadlineExpired ? (
               <p className="vd-stat-sub" style={{ color: "var(--danger)", fontWeight: 700, marginTop: 8 }}>
-                <Ban size={13} style={{display:"inline",verticalAlign:"middle",marginRight:4,color:"var(--danger)"}} />Voting telah berakhir
+                <AlertTriangle size={13} style={{display:"inline",verticalAlign:"middle",marginRight:4,color:"var(--danger)"}} />Voting telah berakhir
               </p>
             ) : (
               <div className="vd-countdown">
@@ -144,7 +161,9 @@ const VoterDashboard = () => {
 
           {/* Kandidat */}
           <div className="vd-stat-card card">
-            <div className="vd-stat-icon">👥</div>
+            <div className="vd-stat-icon">
+              <Users size={24} strokeWidth={1.5} color="var(--accent)" />
+            </div>
             <p className="vd-stat-label">Jumlah Kandidat</p>
             <p className="vd-stat-num">{candidates.length}</p>
             <p className="vd-stat-sub">kandidat tersedia</p>
@@ -152,7 +171,13 @@ const VoterDashboard = () => {
 
           {/* Status */}
           <div className={`vd-stat-card card ${hasVoted ? "vd-voted" : "vd-not-voted"}`}>
-            <div className="vd-stat-icon">{hasVoted ? "✅" : "🗳️"}</div>
+            <div className="vd-stat-icon">
+              {hasVoted ? (
+                <CheckCircle size={24} strokeWidth={1.5} color="var(--success)" />
+              ) : (
+                <Vote size={24} strokeWidth={1.5} color="var(--accent)" />
+              )}
+            </div>
             <p className="vd-stat-label">Status Anda</p>
             <p className="vd-status-text">
               {hasVoted ? "Suara Anda Sudah Terhitung!" : "Anda Belum Memberikan Suara"}
@@ -165,7 +190,7 @@ const VoterDashboard = () => {
             )}
             {!hasVoted && deadlineExpired && (
               <p style={{ fontSize: "0.8rem", color: "var(--danger)", fontWeight: 600, marginTop: 8 }}>
-                <Ban size={13} style={{display:"inline",verticalAlign:"middle",marginRight:4,color:"var(--danger)"}} />Waktu voting habis
+                <AlertTriangle size={13} style={{display:"inline",verticalAlign:"middle",marginRight:4,color:"var(--danger)"}} />Waktu voting habis
               </p>
             )}
           </div>
@@ -175,7 +200,10 @@ const VoterDashboard = () => {
         {candidates.length > 0 && (
           <div className="vd-results animate-fadeUp delay-2">
             <div className="vd-section-header">
-              <h2>📊 Hasil Voting Sementara</h2>
+              <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
+                <BarChart3 size={24} color="var(--accent)" />
+                <h2>Hasil Voting Sementara</h2>
+              </div>
               <span className="badge badge-primary">Live</span>
             </div>
             <div className="vd-results-list">
@@ -199,14 +227,18 @@ const VoterDashboard = () => {
                           <div className="vd-result-fill" style={{ width: `${pct}%` }} />
                         </div>
                       </div>
-                      {i === 0 && totalVotes > 0 && <div className="vd-result-winner">👑</div>}
+                      {i === 0 && totalVotes > 0 && (
+                        <div className="vd-result-winner">
+                          <Crown size={20} color="var(--warning)" />
+                        </div>
+                      )}
                     </div>
                   );
                 })}
             </div>
             {totalVotes === 0 && (
               <div className="vd-no-votes card">
-                <span>🗳️</span>
+                <Vote size={32} style={{opacity: 0.5}} />
                 <p>Belum ada suara masuk. Jadilah yang pertama!</p>
               </div>
             )}
