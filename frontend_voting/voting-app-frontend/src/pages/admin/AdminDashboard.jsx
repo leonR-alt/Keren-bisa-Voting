@@ -44,7 +44,7 @@ const AdminDashboard = () => {
       </p>
       {electionInfo.deadline && (
         <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginTop: 8 }}>
-          ⏰ Deadline: {formatDeadline(electionInfo.deadline)}
+           Deadline: {formatDeadline(electionInfo.deadline)}
         </p>
       )}
 

@@ -81,6 +81,17 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getAllVoters());
     }
 
+        @GetMapping("/voters/{id}")
+    public ResponseEntity<?> getVoter(
+            @RequestHeader("Authorization") String authHeader,
+            @PathVariable Integer id) {
+        String token = authHeader.replace("Bearer ", "");
+        if (!jwtTokenService.validateToken(token) || !isAdmin(token))
+            return ResponseEntity.status(403).build();
+        
+        return ResponseEntity.ok(voterRepository.findById(id).orElse(null));
+    }
+
     @PutMapping("/voters/{id}")
     public ResponseEntity<?> updateVoter(
             @RequestHeader("Authorization") String authHeader,

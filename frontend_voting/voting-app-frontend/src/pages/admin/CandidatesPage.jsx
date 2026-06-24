@@ -39,7 +39,11 @@ const CandidatesPage = () => {
   const [newCandidates, setNewCandidates] = useState([]);
   const [editingCandidate, setEditingCandidate] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false); // ✅ TAMBAH INI
   const { toasts, addToast, removeToast } = useToast();
+  
+  // ✅ TAMBAH INI - untuk abort double submit
+  const abortControllerRef = React.useRef(null);
 
   useEffect(() => { fetchCandidates(); fetchElectionInfo(); }, []);
 
@@ -87,17 +91,34 @@ const CandidatesPage = () => {
 
   const handleCandidatesSubmit = async (e) => {
     e.preventDefault();
+    
+    // ✅ PREVENT DOUBLE SUBMIT
+    if (isSubmitting) {
+      addToast("Proses sedang berlangsung, tunggu sebentar...", "warning");
+      return;
+    }
+    
     const token = localStorage.getItem("token");
     for (const c of newCandidates) {
       if (!c.name || !c.party) { addToast("Nama dan partai semua kandidat wajib diisi!", "warning"); return; }
     }
+    
+    // ✅ SET FLAG DAN CREATE ABORT CONTROLLER
+    setIsSubmitting(true);
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
+    
     try {
       await fetch(`${API_BASE_URL}/admin/deadline`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ deadline: new Date(electionInfo.deadline).getTime(), title: electionInfo.title }),
+        signal, // ✅ TAMBAH SIGNAL
       });
-      const votersRes = await fetch(`${API_BASE_URL}/admin/voters`, { headers: { Authorization: `Bearer ${token}` } });
+      const votersRes = await fetch(`${API_BASE_URL}/admin/voters`, { 
+        headers: { Authorization: `Bearer ${token}` },
+        signal, // ✅ TAMBAH SIGNAL
+      });
       if (votersRes.ok) {
         const allVoters = await votersRes.json();
         for (const v of allVoters) {
@@ -105,17 +126,23 @@ const CandidatesPage = () => {
             method: "PUT",
             headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
             body: JSON.stringify({ name: v.name, email: v.email, isAdmin: v.isAdmin, hasVoted: false }),
+            signal, // ✅ TAMBAH SIGNAL
           });
         }
       }
       for (const c of candidates) {
-        await fetch(`${API_BASE_URL}/admin/candidates/${c.id}`, { method: "DELETE", headers: { Authorization: `Bearer ${token}` } });
+        await fetch(`${API_BASE_URL}/admin/candidates/${c.id}`, { 
+          method: "DELETE", 
+          headers: { Authorization: `Bearer ${token}` },
+          signal, // ✅ TAMBAH SIGNAL
+        });
       }
       for (const c of newCandidates) {
         await fetch(`${API_BASE_URL}/admin/candidates`, {
           method: "POST",
           headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
           body: JSON.stringify(c),
+          signal, // ✅ TAMBAH SIGNAL
         });
       }
       await fetchCandidates();
@@ -123,7 +150,15 @@ const CandidatesPage = () => {
       setStep(null);
       addToast(`Pemilihan "${electionInfo.title}" berhasil dibuat!`, "success");
     } catch (err) {
-      addToast("Gagal menyimpan: " + err.message, "error");
+      // ✅ CEK APAKAH ABORT ATAU ERROR ASLI
+      if (err.name === "AbortError") {
+        addToast("Proses dibatalkan (double submit terdeteksi)", "warning");
+      } else {
+        addToast("Gagal menyimpan: " + err.message, "error");
+      }
+    } finally {
+      setIsSubmitting(false); // ✅ RESET FLAG
+      abortControllerRef.current = null;
     }
   };
 
@@ -276,8 +311,10 @@ const CandidatesPage = () => {
                       ))}
                     </div>
                     <div className="wizard-actions">
-                      <button type="button" className="btn btn-outline" onClick={() => setWizardStep(STEPS.INFO)}>← Kembali</button>
-                      <button type="submit" className="btn btn-primary"><Save size={15} /> Simpan Pemilihan</button>
+                      <button type="button" className="btn btn-outline" onClick={() => setWizardStep(STEPS.INFO)} disabled={isSubmitting}>← Kembali</button>
+                      <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+                        <Save size={15} /> {isSubmitting ? "Menyimpan..." : "Simpan Pemilihan"}
+                      </button>
                     </div>
                   </form>
                 </>
